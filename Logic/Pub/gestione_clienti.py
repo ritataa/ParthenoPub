@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QListWidget, QInputDialog, QMessageBox
-from Common.communication import launchMethod, load_server_address_from_json
+from common.communication import launchMethod, load_server_address_from_json
 import json
 import os
 

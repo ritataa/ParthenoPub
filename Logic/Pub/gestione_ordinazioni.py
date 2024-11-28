@@ -1,8 +1,8 @@
 import json
 import os
 from PyQt5.QtWidgets import QMessageBox, QDialog
-from Common.communication import request_constructor_str, launchMethod
-from gui.Pub.gestione_ordinazioni_gui import Ui_GestioneOrdinazioni
+from common.communication import request_constructor_str, launchMethod
+from gui.pub.gestione_ordinazioni_gui import Ui_GestioneOrdinazioni
 
 
 class GestioneOrdinazioniLogic(QDialog):

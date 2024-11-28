@@ -1,7 +1,7 @@
 import json
 import os
 
-from Common.communication import find_row, find_rows, insert_row, update_row, find_rows_v2, filter_dates_after_current
+from common.communication import find_row, find_rows, insert_row, update_row, find_rows_v2, filter_dates_after_current
 
 ROOT_DIR = os.path.abspath(os.curdir)
 
