@@ -1,7 +1,8 @@
 import json
 import os
 from PyQt5.QtWidgets import QMessageBox, QDialog
-from common.communication import request_constructor_str, launchMethod
+from common.communication import loadJSONFromFile,request_constructor_str
+from SelMultiplexClient import launchMethod
 from gui.pub.gestione_ordinazioni_gui import Ui_GestioneOrdinazioni
 
 

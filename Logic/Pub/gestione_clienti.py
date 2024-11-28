@@ -1,46 +1,26 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QListWidget, QInputDialog, QMessageBox
-from common.communication import launchMethod, load_server_address_from_json
 import json
 import os
+
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QListWidget, QInputDialog, QMessageBox
+from common.communication import loadJSONFromFile
+from SelMultiplexClient import launchMethod
+from gui.pub.gestione_clienti_gui import Ui_GestioneClienti
 
 class GestioneClienti(QDialog):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Gestione Clienti")
-        self.setGeometry(100, 100, 400, 300)
+        self.ui = Ui_GestioneClienti()
+        self.ui.setupUi(self)
 
-        # Layout per la finestra
-        self.layout = QVBoxLayout()
-
-        # Etichetta per visualizzare le informazioni
-        self.label = QLabel("Visualizza i clienti:", self)
-        self.layout.addWidget(self.label)
-
-        # Lista dei clienti
-        self.lista_clienti = QListWidget(self)
-        self.layout.addWidget(self.lista_clienti)
-
-        # Bottone per mostrare i clienti
-        self.button_mostra = QPushButton("Mostra Clienti", self)
-        self.button_mostra.clicked.connect(self.mostra_clienti)
-        self.layout.addWidget(self.button_mostra)
-
-        # Bottone per aggiungere un cliente
-        self.button_aggiungi = QPushButton("Aggiungi Cliente", self)
-        self.button_aggiungi.clicked.connect(self.aggiungi_cliente)
-        self.layout.addWidget(self.button_aggiungi)
-
-        # Bottone per modificare un cliente
-        self.button_modifica = QPushButton("Modifica Cliente", self)
-        self.button_modifica.clicked.connect(self.modifica_cliente)
-        self.layout.addWidget(self.button_modifica)
-
-        self.setLayout(self.layout)
+        # Collega i pulsanti alle loro rispettive funzioni
+        self.ui.button_mostra.clicked.connect(self.mostra_clienti)
+        self.ui.button_aggiungi.clicked.connect(self.aggiungi_cliente)
+        self.ui.button_modifica.clicked.connect(self.modifica_cliente)
 
     def mostra_clienti(self):
         # Carica le configurazioni del server dal file JSON
         ROOT_DIR = os.path.abspath(os.curdir)
-        server_address, server_port = load_server_address_from_json(os.path.join(ROOT_DIR, "server_address.json"))
+        server_address, server_port = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
 
         # Chiamata al server per ottenere i clienti
         request_data = {"action": "get_clienti"}  # Esempio di richiesta
@@ -71,7 +51,7 @@ class GestioneClienti(QDialog):
 
             # Carica le configurazioni del server
             ROOT_DIR = os.path.abspath(os.curdir)
-            server_address, server_port = load_server_address_from_json(os.path.join(ROOT_DIR, "server_address.json"))
+            server_address, server_port = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
 
             # Invia la richiesta al server per aggiungere il cliente
             response = launchMethod(request_str, server_address, server_port)
@@ -102,7 +82,7 @@ class GestioneClienti(QDialog):
 
                 # Carica le configurazioni del server
                 ROOT_DIR = os.path.abspath(os.curdir)
-                server_address, server_port = load_server_address_from_json(os.path.join(ROOT_DIR, "server_address.json"))
+                server_address, server_port = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
 
                 # Invia la richiesta al server per modificare il cliente
                 response = launchMethod(request_str, server_address, server_port)

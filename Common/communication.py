@@ -3,6 +3,7 @@ import datetime
 import socket
 import os
 import csv
+import multiprocessing
 
 
 # Funzione per costruire il protocollo di comunicazione (header + payload)
@@ -65,29 +66,14 @@ def parse_communication_protocol(communication_string):
     # Estrae il payload
     payload = communication_string[payload_start:payload_end].strip()
     
-    # Parso l'header come dizionario (associative array)
-    header_array = parse_header(header)
-    
-    # Parso il payload come dizionario (se è JSON)
-    payload_data = parse_payload(payload)
-    
-    return {"Header": header_array, "Payload": payload_data}
-
-
-def parse_header(header):
-    """
-    Parso l'header e lo converto in un dizionario.
-    L'header è una stringa separata da punto e virgola, quindi dividiamo la stringa
-    e creiamo un dizionario.
-    """
+    # Parse header into an associative array
     header_array = {}
-    header_segments = header.split(";")
+    header_segments = header.split(';')
+
+    payload_array = {}
+    payload_segments = payload.split(';')
     
-    for segment in header_segments:
-        key, value = segment.split("=")
-        header_array[key.strip()] = value.strip()
-    
-    return header_array
+    return {"Header": header_array, "Payload": payload}
 
 
 def parse_payload(payload):
@@ -102,13 +88,15 @@ def parse_payload(payload):
     
     return payload_data
 
+def request_constructor_obj(input_object, header):
+    return {
+        "header": header,
+        "payload": input_object
+    }
 
-def get_current_date():
-    """
-    Restituisce la data corrente nel formato "gg-mm-aaaa".
-    """
-    current_date = datetime.datetime.now()
-    return current_date.strftime("%d-%m-%Y")
+
+def request_constructor_str(input_object, header):
+    return json.dumps(request_constructor_obj(input_object, header))
 
 
 def custom_hash(text: str):
@@ -121,31 +109,11 @@ def custom_hash(text: str):
     return hash_value
 
 # Funzione per caricare l'indirizzo e la porta del server dal file JSON
-def load_server_address_from_json(json_file="server_address.json"):
-    """
-    Carica l'indirizzo e la porta del server dal file JSON.
-    """
-    with open(json_file, 'r') as f:
-        server_data = json.load(f)
-    return server_data['address'], server_data['port']
-
-# Funzione per avviare la comunicazione con il server
-def launchMethod(request_str):
-    """
-    Crea una connessione al server usando i socket e invia una richiesta.
-    """
-    # Carica le coordinate del server dal file JSON
-    address, port = load_server_address_from_json()
-    
-    # Crea una connessione al server usando i socket
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((address, port))
-        s.sendall(request_str.encode('utf-8'))
-        
-        # Ricevi la risposta dal server
-        data = s.recv(1024)
-    
-    return data.decode('utf-8')
+def loadJSONFromFile(json_file):
+    f = open(json_file)
+    data = json.load(f)
+    f.close()
+    return data
 
 # Funzioni per gestire i CSV
 def find_row(csv_file, search_criteria):
@@ -176,24 +144,54 @@ def find_rows(csv_file, search_criteria=None):
 
     return matching_rows
 
+def find_rows_v2(csv_file, search_criteria_list=None):
+    matching_rows = []
+
+    with open(csv_file, 'r', newline='') as file:
+        reader = csv.reader(file)
+        header = next(reader)  # Assuming the first row is the header
+
+        for row in reader:
+            # If no search criteria are provided, return all rows
+            if search_criteria_list is None:
+                matching_rows.append(row)
+            else:
+                # Check if the row matches any of the criteria in the list
+                row_matches = False
+                for search_criteria in search_criteria_list:
+                    # Check if all criteria in the dictionary match
+                    matches = all(row[header.index(column)] == str(value) for column, value in search_criteria.items())
+                    if matches:
+                        row_matches = True
+                        break
+                if row_matches:
+                    matching_rows.append(row)
+
+    return matching_rows
 
 def insert_row(csv_file, data_row, custom_id=None):
+
     if custom_id is not None:
         new_id = custom_id
     else:
+        # Determine the last ID in the CSV file and increment it
+        # Critical Section Start
         with open(csv_file, 'r') as file:
             reader = csv.reader(file)
             last_row = None
             for row in reader:
                 last_row = row
-            if last_row is None or not last_row[0].isdigit():
+            if last_row is None or is_number(last_row[0]) == False:
                 new_id = 1
             else:
                 new_id = int(last_row[0]) + 1
-
+    Lock = multiprocessing.Lock()
+    # Insert the new row into the CSV file
+    Lock.acquire() #Critical section for write in files
     with open(csv_file, 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([new_id] + data_row)
+    Lock.release()  # Critical Section END
 
     return new_id
 
@@ -211,10 +209,61 @@ def update_row(csv_file: str, row_id: str, column_name: str, new_value: str):
         print(f"Row with ID {row_id} not found.")
         return
 
+    Lock = multiprocessing.Lock()
+    # Write the updated contents back to the CSV file
+    Lock.acquire()  # Critical section for write in files
     with open(csv_file, 'w', newline='') as file:
         fieldnames = csv_reader.fieldnames
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
+    Lock.release()
 
     print(f"Value in row {row_id}, column {column_name} updated to {new_value}.")
+
+
+
+def is_number(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+#DATE
+
+def formato_data():
+    # Definisci i nomi dei giorni della settimana e dei mesi
+    nomi_giorni = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]
+    nomi_mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre",
+                "Ottobre", "Novembre", "Dicembre"]
+
+    # Ottieni la data e l'ora attuali
+    oggi = datetime.datetime.now()
+
+    # Ottieni il giorno della settimana, il giorno del mese e il mese attuali
+    giorno_settimana = nomi_giorni[oggi.weekday()]
+    giorno_mese = oggi.day
+    mese = nomi_mesi[oggi.month - 1]
+    anno = oggi.year
+
+    # Costruisci la stringa con il formato richiesto
+    data_formattata = f"{giorno_settimana} {giorno_mese} {mese} {anno}"
+    return data_formattata
+
+
+def get_current_date():
+    current_date = datetime.datetime.now()
+    return current_date.strftime("%d-%m-%Y")
+
+
+def filter_dates_after_current(dates):
+    current_date = datetime.datetime.now()
+    matching_rows = []
+
+    for row in dates:
+        row_date = datetime.datetime.strptime(row[1], "%d-%m-%Y %H:%M:%S")
+        if row_date > current_date:
+            matching_rows.append(row)
+
+    return matching_rows
