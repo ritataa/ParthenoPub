@@ -4,7 +4,7 @@ Codice gruppo: bgczo9w9mcl
 
 Scrivere un'applicazione client/server parallelo in cui viene effettuata la gestione di un pub
 
-Linguaggio: Python Badge
+Linguaggio: Python 
 
 ## Pub:
 1. Accetta un cliente se ci sono posti disponibili
