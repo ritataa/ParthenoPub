@@ -1,46 +1,93 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton
-from common.communication import launchMethod, load_server_address_from_json
 import json
 import os
+from PyQt5.QtWidgets import QDialog, QMessageBox
+from common.communication import loadJSONFromFile, request_constructor_str
+from SelMultiplexClient import launchMethod
+from gui.pub.gestione_prenotazioni_gui import Ui_GestionePrenotazioni
 
-class GestionePrenotazioni(QDialog):
+class GestionePrenotazioniLogic(QDialog):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Gestione Prenotazioni")
-        self.setGeometry(100, 100, 400, 300)
+        self.ui = Ui_GestionePrenotazioni()
+        self.ui.setupUi(self)  # Passa 'self' per associarlo correttamente all'istanza di QDialog
         
-        # Layout per la finestra
-        self.layout = QVBoxLayout()
-        
-        # Etichetta per visualizzare le informazioni
-        self.label = QLabel("Visualizza le prenotazioni:", self)
-        self.layout.addWidget(self.label)
-        
-        # Aggiungi un bottone per interagire con il sistema di prenotazioni
-        self.button = QPushButton("Mostra Prenotazioni", self)
-        self.button.clicked.connect(self.mostra_prenotazioni)
-        self.layout.addWidget(self.button)
-        
-        self.setLayout(self.layout)
-    
-    def mostra_prenotazioni(self):
-        # Carica le configurazioni del server dal file JSON
+        # Collega i pulsanti alle loro funzioni
+        self.ui.aggiornaPrenotazioniButton.clicked.connect(self.aggiornaPrenotazioni)
+        self.ui.cancellaPrenotazioneButton.clicked.connect(self.cancellaPrenotazione)
+        self.ui.confermaPrenotazioneButton.clicked.connect(self.confermaPrenotazione)
+
+    def aggiornaPrenotazioni(self):
         ROOT_DIR = os.path.abspath(os.curdir)
-        server_address, server_port = load_server_address_from_json(os.path.join(ROOT_DIR, "server_address.json"))
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
         
         # Chiamata al server per ottenere le prenotazioni
-        request_data = {"action": "get_prenotazioni"}  # Esempio di richiesta
-        request_str = json.dumps(request_data)  # Converte la richiesta in formato JSON
+        response = launchMethod(
+            request_constructor_str(None, "GetPrenotazioni"), 
+            server_coords['address'], 
+            server_coords['port']
+        )
         
-        # Utilizza launchMethod per inviare la richiesta al server
-        response = launchMethod(request_str, server_address, server_port)
+        # Elabora la risposta e mostra le prenotazioni
+        try:
+            prenotazioni = json.loads(response).get("result", [])
+            self.ui.lista_prenotazioni.clear()  # Pulisce la lista esistente
+            for prenotazione in prenotazioni:
+                self.ui.lista_prenotazioni.addItem(
+                    f"Prenotazione #{prenotazione['id']} - {prenotazione['cliente']} - {prenotazione['data']}"
+                )
+        except json.JSONDecodeError:
+            QMessageBox.warning(self, "Errore", "Impossibile decodificare la risposta del server.")
+
+    def cancellaPrenotazione(self):
+        prenotazione_selezionata = self.ui.lista_prenotazioni.currentItem()
+        if not prenotazione_selezionata:
+            QMessageBox.warning(self, "Errore", "Seleziona una prenotazione da cancellare!")
+            return
         
-        # Elabora la risposta (assumiamo che sia una lista di prenotazioni)
-        prenotazioni = json.loads(response)
-        self.mostra_sul_gui(prenotazioni)
+        prenotazione_id = prenotazione_selezionata.text().split("#")[1].split(" - ")[0]
+        payload = {"prenotazione_id": prenotazione_id}
+        
+        ROOT_DIR = os.path.abspath(os.curdir)
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+        
+        # Chiamata al server per cancellare la prenotazione
+        response = launchMethod(
+            request_constructor_str(payload, "CancellaPrenotazione"),
+            server_coords['address'],
+            server_coords['port']
+        )
+        
+        # Gestione della risposta
+        result = json.loads(response).get("result")
+        if result == "OK":
+            QMessageBox.information(self, "Successo", "Prenotazione cancellata con successo!")
+            self.aggiornaPrenotazioni()
+        else:
+            QMessageBox.warning(self, "Errore", "Errore durante la cancellazione della prenotazione.")
 
-
-    def mostra_sul_gui(self, prenotazioni):
-        # Funzione per visualizzare le prenotazioni sul GUI
-        prenotazioni_text = "\n".join([f"Prenotazione {i+1}: {p}" for i, p in enumerate(prenotazioni)])
-        self.label.setText(f"Prenotazioni:\n{prenotazioni_text}")
+    def confermaPrenotazione(self):
+        prenotazione_selezionata = self.ui.lista_prenotazioni.currentItem()
+        if not prenotazione_selezionata:
+            QMessageBox.warning(self, "Errore", "Seleziona una prenotazione da confermare!")
+            return
+        
+        prenotazione_id = prenotazione_selezionata.text().split("#")[1].split(" - ")[0]
+        payload = {"prenotazione_id": prenotazione_id}
+        
+        ROOT_DIR = os.path.abspath(os.curdir)
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+        
+        # Chiamata al server per confermare la prenotazione
+        response = launchMethod(
+            request_constructor_str(payload, "ConfermaPrenotazione"),
+            server_coords['address'],
+            server_coords['port']
+        )
+        
+        # Gestione della risposta
+        result = json.loads(response).get("result")
+        if result == "OK":
+            QMessageBox.information(self, "Successo", "Prenotazione confermata con successo!")
+            self.aggiornaPrenotazioni()
+        else:
+            QMessageBox.warning(self, "Errore", "Errore durante la conferma della prenotazione.")

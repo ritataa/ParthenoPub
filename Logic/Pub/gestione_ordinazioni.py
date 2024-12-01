@@ -12,8 +12,13 @@ class GestioneOrdinazioniLogic(QDialog):
         self.ui = Ui_GestioneOrdinazioni()
         self.ui.setupUi(self)
 
+        # Carica la configurazione del server
+        ROOT_DIR = os.path.abspath(os.curdir)
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+
         # Connessione al server per ottenere gli ordini
-        ordini = json.loads(launchMethod(request_constructor_str(None, "GetOrdini")))
+        ordini = launchMethod(request_constructor_str(None, "GetOrdini"), server_coords['address'], server_coords['port'])
+        ordini = json.loads(ordini)
         ordini = ordini['result']
 
         # Aggiungere gli ordini alla lista dell'interfaccia
@@ -33,8 +38,12 @@ class GestioneOrdinazioniLogic(QDialog):
             "azione": "processa"
         }
 
+        # Carica la configurazione del server
+        ROOT_DIR = os.path.abspath(os.curdir)
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+
         # Invia la richiesta per processare l'ordine
-        res = launchMethod(request_constructor_str(payload, 'processaOrdine'))
+        res = launchMethod(request_constructor_str(payload, 'processaOrdine'), server_coords['address'], server_coords['port'])
         res = json.loads(res)
         
         if res["result"] == 'OK':

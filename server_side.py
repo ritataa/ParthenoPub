@@ -3,9 +3,15 @@ import os
 
 from common.communication import find_row, find_rows, insert_row, update_row, find_rows_v2, filter_dates_after_current
 
+
+# Percorso principale
 ROOT_DIR = os.path.abspath(os.curdir)
 
+# Percorsi ai file CSV
 DB = {
+    "TAVOLI": os.path.join(ROOT_DIR, 'db', 'tavoli', 'tavoli.csv'),
+    "PRENOTAZIONI": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'prenotazioni.csv'),
+    "UTENTI": os.path.join(ROOT_DIR, 'db', 'utenti', 'utenti.csv'),
     "CLIENTI": os.path.join(ROOT_DIR, 'db', 'clienti.csv'),
     "ORDINI": os.path.join(ROOT_DIR, 'db', 'ordini.csv'),
     "PIATTI": os.path.join(ROOT_DIR, 'db', 'piatti.csv'),

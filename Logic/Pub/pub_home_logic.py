@@ -4,7 +4,7 @@ from gui.pub.pub_home_gui import Ui_Pub_Home  # GUI specifica per il Pub
 from logic.pub.gestione_clienti import GestioneClienti
 from logic.pub.gestione_ordinazioni import GestioneOrdinazioniLogic
 from logic.pub.gestione_pagamenti import GestionePagamentiLogic
-from logic.pub.gestione_prenotazioni import GestionePrenotazioni
+from logic.pub.gestione_prenotazioni import GestionePrenotazioniLogic
 from logic.pub.gestione_tavoli import GestioneTavoliLogic
 
 
@@ -75,7 +75,7 @@ class PubHomeLogic(QMainWindow):
         """
         Mostra il dialog per la gestione del menu.
         """
-        dialog = GestionePrenotazioni()
+        dialog = GestionePrenotazioniLogic()
         dialog.exec_()
 
 def run(user):

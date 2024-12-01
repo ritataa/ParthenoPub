@@ -1,7 +1,8 @@
 import json
 import os
 from PyQt5.QtWidgets import QMessageBox, QDialog
-from common.communication import request_constructor_str, launchMethod
+from common.communication import loadJSONFromFile,request_constructor_str
+from SelMultiplexClient import launchMethod
 from gui.pub.gestione_pagamenti_gui import Ui_GestionePagamenti
 
 
@@ -11,8 +12,13 @@ class GestionePagamentiLogic(QDialog):
         self.ui = Ui_GestionePagamenti()
         self.ui.setupUi(self)
 
+        # Carica la configurazione del server
+        ROOT_DIR = os.path.abspath(os.curdir)
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+
         # Connessione al server per ottenere i pagamenti
-        pagamenti = json.loads(launchMethod(request_constructor_str(None, "GetPagamenti")))
+        pagamenti = launchMethod(request_constructor_str(None, "GetPagamenti"), server_coords['address'], server_coords['port'])
+        pagamenti = json.loads(pagamenti)
         pagamenti = pagamenti['result']
 
         # Aggiungere i pagamenti alla lista dell'interfaccia
@@ -32,8 +38,12 @@ class GestionePagamentiLogic(QDialog):
             "azione": "conferma"
         }
 
+        # Carica la configurazione del server
+        ROOT_DIR = os.path.abspath(os.curdir)
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+
         # Invia la richiesta per confermare il pagamento
-        res = launchMethod(request_constructor_str(payload, 'confermaPagamento'))
+        res = launchMethod(request_constructor_str(payload, 'confermaPagamento'), server_coords['address'], server_coords['port'])
         res = json.loads(res)
         
         if res["result"] == 'OK':
