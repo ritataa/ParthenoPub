@@ -1,0 +1,45 @@
+#stato -> 0 ordine non arrivato 1 arrivato
+ID,Nome,Tipo,TipoMenu,Prezzo,TavoloID,Numero,Stato
+
+# tavolo 1 = 2 persone
+1,Reti,panino,generale,12.50,1,1,0
+2,Sistemi operativi,panino,generale,11.00,1,1,0
+3,Birra chiara,birra,birre,4.50,1,1,1
+4,Birra scura,birra,birre,5.00,1,1,1
+
+# tavolo 3 = 2 persone
+5,Ingegneria del software,panino,generale,8.00,3,2,1
+6,Mate1,panino,generale,7.50,3,2,1
+7,Coca-Cola,bevanda,generale,2.00,3,2,1
+
+# tavolo 4 = 4 persone
+8,Architettura dei calcolatori,panino,generale,10.00,4,1,0
+9,Architettura dei calcolatori,panino,generale,10.00,4,1,1
+10,Basi di dati,panino,generale,9.00,4,1,0
+11,Sistemi operativi,panino,generale,11.00,4,1,1
+12,Birra IPA,birra,birre,6.00,4,1,0
+13,Birra Weiss,birra,birre,5.50,4,1,1
+
+# tavolo 5 = 3 persone
+14,Bruschette al pomodoro,antipasto,generale,5.00,5,1,1
+15,ASD,panino,generale,14.00,5,2,1
+16,Reti,panino,generale,12.50,5,1,1
+17,Acqua naturale,bevanda,generale,1.50,5,2,1
+18,Coca-Cola,bevanda,generale,2.00,5,1,1
+
+# tavolo 7 = 6 persone
+19,Crostini con patè,antipasto,generale,6.00,7,2,1
+20,Bruschette al pomodoro,antipasto,generale,5.00,7,2,1
+21,Architettura dei calcolatori,panino,generale,10.00,7,2,1
+22,ASD,panino,generale,14.00,7,2,1
+23,Mate1,panino,generale,7.50,7,2,1
+24,Birra rossa,birra,birre,5.50,7,1,1
+25,Birra Weiss,birra,birre,5.50,7,1,1
+26,Stout,birra,birre,6.00,7,1,1
+27,Coca-Cola,bevanda,generale,2.00,7,3,1
+28,Tiramisù,dolce,dolci,6.00,7,1,1
+29,Cheesecake,dolce,dolci,5.50,7,1,1
+30,Profiteroles,dolce,dolci,5.50,7,1,1
+31,Crostata di frutta,dolce,dolci,4.50,7,1,1
+32,Semifreddo,dolce,dolci,4.00,7,1,1
+33,Caprese,dolce,dolci,5.00,7,1,1

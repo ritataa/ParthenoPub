@@ -1,0 +1,4 @@
+#stato -> 0 prenotazione non confermata 1 prenotazione confermata
+ID,RichiestaID,ClienteID,TavoloID,DataOra,NumeroPersone,Stato
+1,1,1001,6,2024-11-29 19:30:00,5,1
+2,4,1002,2,2024-11-29 21:00:00,2,1
