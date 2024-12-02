@@ -10,18 +10,67 @@ ROOT_DIR = os.path.abspath(os.curdir)
 # Percorsi ai file CSV
 DB = {
     "TAVOLI": os.path.join(ROOT_DIR, 'db', 'tavoli', 'tavoli.csv'),
-    "PRENOTAZIONI": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'prenotazioni.csv'),
-    "UTENTI": os.path.join(ROOT_DIR, 'db', 'utenti', 'utenti.csv'),
-    "CLIENTI": os.path.join(ROOT_DIR, 'db', 'clienti.csv'),
-    "ORDINI": os.path.join(ROOT_DIR, 'db', 'ordini.csv'),
-    "PIATTI": os.path.join(ROOT_DIR, 'db', 'piatti.csv'),
-    "MENU": os.path.join(ROOT_DIR, 'db', 'menu.csv'),
-    "STAF": os.path.join(ROOT_DIR, 'db', 'staff.csv'),
+
+    "RICHIESTA_CAMERIERE": os.path.join(os.path.abspath(os.curdir), 'db', 'prenotazioni', 'richiesta_cameriere.csv'),
+    "INVIA_ORDINE": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'invia_ordine.csv'),
+    "PRENOTA_TAVOLO": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'prenota_tavolo.csv'),
+    "RICHIESTA_ENTRATA": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'richiesta_entrata.csv'),
+    "RICHIESTA_MENU": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'richiesta_menu.csv'),
+
+    "PAGAMENTI": os.path.join(ROOT_DIR, 'db', 'pagamenti', 'pagamenti.csv'),
+
+    "MENU": os.path.join(ROOT_DIR, 'db', 'menu', 'menu.csv'),
 }
 
 def default_case():
     return "Method not implemented"
 
+# Funzione per ottenere il menu in base al tipo richiesto
+def GetMenu(menu_type):
+    menu_file = DB["MENU"]  # Percorso del file CSV del menu
+    menu_rows = find_rows(menu_file)  # Ottieni tutte le righe del menu
+    
+    if menu_rows:
+        # Restituisci il menu in un formato che il client possa comprendere
+        menu = []
+        for row in menu_rows:
+            # Supponiamo che ogni riga contenga: ID, Nome, Tipo, TipoMenu, Prezzo, Descrizione
+            if row[3].lower() == menu_type.lower():
+                menu.append({
+                "ID": row[0],
+                "Nome": row[1],
+                "Tipo": row[2],
+                "TipoMenu": row[3],
+                "Prezzo": row[4],
+                "Descrizione": row[5]
+            })
+        if menu:
+            return {"result": menu}
+        else:
+            return {"result": "No items found for the requested menu type."}
+    else:
+        return {"result": "false"}
+
+import datetime
+def richiestaCameriere(payload):
+    """
+    Handles the request to call a waiter for a specific table.
+    """
+    numero_tavolo = payload["numero_tavolo"]
+
+    # Check if the table exists and is available
+    tavolo_row = find_row(DB["TAVOLI"], {"NumeroTavolo": numero_tavolo})
+    if tavolo_row:
+        # Log the request in a CSV file or update the table status
+        timestamp = datetime.datetime.now().isoformat()
+        insert_row(DB["RICHIESTA_CAMERIERE"], [numero_tavolo, "Richiesta cameriere", timestamp])
+        
+        # Optionally update the table status if needed
+        # update_row(DB["TAVOLI"], tavolo_row[0], "Stato", "Cameriere chiamato")
+
+        return {"stato": "successo"}
+    else:
+        return {"stato": "errore", "messaggio": "Tavolo non trovato"}
 
 def GetCliente(payload):
     """
@@ -94,6 +143,15 @@ def DeleteOrdiniByTavolo(payload):
 def method_switch(method, payload):
     match method:
 
+        # Menu
+        case "GetMenu":
+            return GetMenu(payload)
+
+        # Cameriere
+        case "richiestaCameriere":
+            return richiestaCameriere(payload)
+
+
         # Cliente
         case "GetCliente":
             return GetCliente(payload)
@@ -110,6 +168,7 @@ def method_switch(method, payload):
         case "DeleteOrdiniByTavolo":
             return DeleteOrdiniByTavolo(payload)
 
+    
         # Caso predefinito per metodi non implementati
         case _:
             return default_case()
