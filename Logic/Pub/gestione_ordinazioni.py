@@ -1,10 +1,10 @@
+import csv
 import json
 import os
-from PyQt5.QtWidgets import QMessageBox, QDialog
-from common.communication import loadJSONFromFile,request_constructor_str
+from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox, QTableWidgetItem
+from common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
 from gui.pub.gestione_ordinazioni_gui import Ui_GestioneOrdinazioni
-
 
 class GestioneOrdinazioniLogic(QDialog):
     def __init__(self):
@@ -12,48 +12,62 @@ class GestioneOrdinazioniLogic(QDialog):
         self.ui = Ui_GestioneOrdinazioni()
         self.ui.setupUi(self)
 
-        # Carica la configurazione del server
+        # Load server configuration
         ROOT_DIR = os.path.abspath(os.curdir)
-        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+        self.server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
 
-        # Connessione al server per ottenere gli ordini
-        ordini = launchMethod(request_constructor_str(None, "GetOrdini"), server_coords['address'], server_coords['port'])
-        ordini = json.loads(ordini)
-        ordini = ordini['result']
+        # Load initial data
+        self.loadOrders()
 
-        # Aggiungere gli ordini alla lista dell'interfaccia
-        for ordine in ordini:
-            self.ui.lista_ordini.addItem(f"Ordine #{ordine['id']} - {ordine['cliente']}")
+        # Connect buttons to their respective functions
+        self.ui.aggiornaTabellaButton.clicked.connect(self.loadOrders)
+        self.ui.segnaComeArrivatoButton.clicked.connect(self.markAsArrived)
 
-        # Collega il pulsante per processare l'ordine
-        self.ui.processaOrdineButton.clicked.connect(self.processaOrdine)
+    def loadOrders(self):
+        # Load orders from CSV
+        try:
+            with open('db/invia_ordine.csv', newline='') as csvfile:
+                reader = csv.DictReader(csvfile)
+                self.ui.tabellaOrdini.setRowCount(0)
+                for row in reader:
+                    rowPosition = self.ui.tabellaOrdini.rowCount()
+                    self.ui.tabellaOrdini.insertRow(rowPosition)
+                    self.ui.tabellaOrdini.setItem(rowPosition, 0, QTableWidgetItem(row['ID']))
+                    self.ui.tabellaOrdini.setItem(rowPosition, 1, QTableWidgetItem(row['Tavolo']))
+                    self.ui.tabellaOrdini.setItem(rowPosition, 2, QTableWidgetItem(row['Nome']))
+                    self.ui.tabellaOrdini.setItem(rowPosition, 3, QTableWidgetItem(row['Tipo']))
+                    self.ui.tabellaOrdini.setItem(rowPosition, 4, QTableWidgetItem(row['Prezzo']))
+                    self.ui.tabellaOrdini.setItem(rowPosition, 5, QTableWidgetItem(row['Stato']))
+        except FileNotFoundError:
+            QMessageBox.warning(self, "Error", "Il file invia_ordine.csv non è stato trovato.")
 
-    def processaOrdine(self):
-        # Recupero l'ordine selezionato
-        ordine_selezionato = self.ui.lista_ordini.currentItem().text()
-        ordine_id = ordine_selezionato.split(" - ")[0].split("#")[1]
-        
-        payload = {
-            "ordine_id": ordine_id,
-            "azione": "processa"
-        }
+    def markAsArrived(self):
+        # Mark selected order as arrived
+        selected_row = self.ui.tabellaOrdini.currentRow()
+        if selected_row == -1:
+            QMessageBox.warning(self, "Error", "Seleziona un ordine per segnarlo come arrivato.")
+            return
 
-        # Carica la configurazione del server
-        ROOT_DIR = os.path.abspath(os.curdir)
-        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+        order_id = self.ui.tabellaOrdini.item(selected_row, 0).text()
+        self.ui.tabellaOrdini.setItem(selected_row, 5, QTableWidgetItem('1'))
 
-        # Invia la richiesta per processare l'ordine
-        res = launchMethod(request_constructor_str(payload, 'processaOrdine'), server_coords['address'], server_coords['port'])
-        res = json.loads(res)
-        
-        if res["result"] == 'OK':
-            QMessageBox.information(None, "Success", "Ordine processato con successo")
-        else:
-            QMessageBox.warning(None, "Error", "Errore nel processamento dell'ordine")
-        
-        print(res)
+        # Update CSV file
+        try:
+            with open('db/invia_ordine.csv', 'r', newline='') as csvfile:
+                reader = list(csv.DictReader(csvfile))
+            with open('db/invia_ordine.csv', 'w', newline='') as csvfile:
+                fieldnames = ['ID', 'Tavolo', 'Nome', 'Tipo', 'Prezzo', 'Stato']
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writeheader()
+                for row in reader:
+                    if row['ID'] == order_id:
+                        row['Stato'] = '1'
+                    writer.writerow(row)
+        except FileNotFoundError:
+            QMessageBox.warning(self, "Error", "Il file invia_ordine.csv non è stato trovato.")
 
 def run():
+    app = QApplication([])
     dialog = GestioneOrdinazioniLogic()
     dialog.exec_()
 

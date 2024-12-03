@@ -1,6 +1,11 @@
-ID,NumeroTavolo,Stato
-1,1,1
-2,3,0
-3,4,0
-4,5,1
-5,7,1
+# stato -> 0 cameriere deve andare 1 cameriere già andato
+ID,NumeroTavolo,Motivo,Stato
+1,1,menu,1
+2,3,menu,0
+3,4,menu,0
+4,5,menu,1
+5,7,menu,1
+
+6,1,ordine,0
+7,5,ordine,1
+8,7,ordine,1
