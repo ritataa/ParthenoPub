@@ -4,12 +4,12 @@ import os
 from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox, QTableWidgetItem
 from common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
-from gui.pub.gestione_ordinazioni_gui import Ui_GestioneOrdinazioni
+from gui.pub.gestione_ordinazioni_gui import Ui_MainWindow
 
 class GestioneOrdinazioniLogic(QDialog):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_GestioneOrdinazioni()
+        self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
         # Load server configuration
