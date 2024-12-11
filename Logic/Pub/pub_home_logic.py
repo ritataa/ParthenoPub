@@ -1,96 +1,97 @@
-from PyQt5.QtWidgets import QMainWindow
-from common.communication import formato_data  # Adattato a quanto presente nel progetto
-from gui.pub.pub_home_gui import Ui_Pub_Home  # GUI specifica per il Pub
-from logic.pub.gestione_clienti import GestioneClienti
+import os
+import csv
+from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
+from common.communication import formato_data
+from gui.pub.pub_home_gui import Ui_GestionePub
+from logic.pub.gestione_richieste_clienti import GestioneRichiesteClientiLogic
 from logic.pub.gestione_ordinazioni import GestioneOrdinazioniLogic
 from logic.pub.gestione_pagamenti import GestionePagamentiLogic
 from logic.pub.gestione_prenotazioni import GestionePrenotazioniLogic
-from logic.pub.gestione_tavoli import GestioneTavoliLogic
-
+from logic.pub.gestione_tavoli import GestioneTavoliApp
 
 class PubHomeLogic(QMainWindow):
-    user = None  # Per mantenere i dettagli dell'utente
+    user = None
 
     def __init__(self, user):
-        """
-        Inizializza la finestra principale della gestione del pub.
-        
-        Args:
-            user: Informazioni sull'utente (ad esempio ID o dati del manager del pub).
-        """
         self.user = user
         super().__init__()
-        self.ui = Ui_Pub_Home()
+        self.ui = Ui_GestionePub()
         self.ui.setupUi(self)
 
-        # Collegamento dei pulsanti della GUI alle rispettive funzioni
+        # Connect buttons to their respective functions
         self.ui.ButtonGestioneClienti.clicked.connect(self.showDialogGestioneClienti)
         self.ui.ButtonGestioneOrdini.clicked.connect(self.showDialogGestioneOrdini)
         self.ui.ButtonGestioneTavoli.clicked.connect(self.showDialogGestioneTavoli)
         self.ui.ButtonGestioneMenu.clicked.connect(self.showDialogGestionePagamenti)
         self.ui.ButtonGestioneMenu.clicked.connect(self.showDialogGestionePrenotazioni)
 
-    def showWindow(self, user):
-        """
-        Mostra la finestra principale con i dettagli dell'utente.
-        
-        Args:
-            user: Informazioni aggiornate sull'utente.
-        """
-        self.show()
-        self.user = user
-        self.ui.LabelUserName.setText(f"Utente: {user['name']}")  # Adattato per mostrare il nome dell'utente
-        self.ui.LabelCurrentDate.setText(f"Data: {formato_data()}")
+        # Load initial data
+        self.loadTableData()
+        self.loadRequestsData()
+        self.loadReservationsData()
+        self.loadOrdersData()
+        self.loadPaymentsData()
 
-    # Metodi per mostrare i dialog delle diverse funzionalità
+    def loadTableData(self):
+        try:
+            with open('db/tavoli.csv', newline='') as csvfile:
+                reader = csv.DictReader(csvfile)
+                self.ui.tabellaTavoli.setRowCount(0)
+                for row in reader:
+                    rowPosition = self.ui.tabellaTavoli.rowCount()
+                    self.ui.tabellaTavoli.insertRow(rowPosition)
+                    self.ui.tabellaTavoli.setItem(rowPosition, 0, QTableWidgetItem(row['ID']))
+                    self.ui.tabellaTavoli.setItem(rowPosition, 1, QTableWidgetItem(row['Stato']))
+        except FileNotFoundError:
+            QMessageBox.warning(self, "Error", "Il file tavoli.csv non è stato trovato.")
+
+    def loadRequestsData(self):
+        # Implement similar logic for loading requests from CSV files
+        pass
+
+    def loadReservationsData(self):
+        # Implement similar logic for loading reservations from CSV files
+        pass
+
+    def loadOrdersData(self):
+        # Implement similar logic for loading orders from CSV files
+        pass
+
+    def loadPaymentsData(self):
+        # Implement similar logic for loading payments from CSV files
+        pass
+
     def showDialogGestioneClienti(self):
-        """
-        Mostra il dialog per la gestione dei clienti.
-        """
-        dialog = GestioneClienti()
+        dialog = GestioneRichiesteClientiLogic()
         dialog.exec_()
 
     def showDialogGestioneOrdini(self):
-        """
-        Mostra il dialog per la gestione degli ordini.
-        """
         dialog = GestioneOrdinazioniLogic()
         dialog.exec_()
 
     def showDialogGestioneTavoli(self):
-        """
-        Mostra il dialog per la gestione dei tavoli.
-        """
-        dialog = GestioneTavoliLogic()
+        dialog = GestioneTavoliApp()
         dialog.exec_()
 
     def showDialogGestionePagamenti(self):
-        """
-        Mostra il dialog per la gestione del menu.
-        """
         dialog = GestionePagamentiLogic()
         dialog.exec_()
 
     def showDialogGestionePrenotazioni(self):
-        """
-        Mostra il dialog per la gestione del menu.
-        """
         dialog = GestionePrenotazioniLogic()
         dialog.exec_()
 
+    def showWindow(self, user):
+        self.show()
+        self.user = user
+        self.ui.LabelUserName.setText(f"Utente: {user['name']}")
+        self.ui.LabelCurrentDate.setText(f"Data: {formato_data()}")
+
 def run(user):
-    """
-    Funzione per avviare la finestra principale del pub.
-    
-    Args:
-        user: Dettagli dell'utente che avvia l'applicazione.
-    """
     window = PubHomeLogic(user)
     window.show()
 
-
 if __name__ == "__main__":
-    # Esempio di chiamata con un utente predefinito
     run({
         "id": "001",
         "name": "Rita",

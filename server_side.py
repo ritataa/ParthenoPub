@@ -1,6 +1,6 @@
 import json
 import os
-
+import datetime
 from common.communication import find_row, find_rows, insert_row, update_row, find_rows_v2, filter_dates_after_current
 
 
@@ -11,7 +11,7 @@ ROOT_DIR = os.path.abspath(os.curdir)
 DB = {
     "TAVOLI": os.path.join(ROOT_DIR, 'db', 'tavoli', 'tavoli.csv'),
 
-    "RICHIESTA_CAMERIERE": os.path.join(os.path.abspath(os.curdir), 'db', 'prenotazioni', 'richiesta_cameriere.csv'),
+    "RICHIESTA_CAMERIERE": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'richiesta_cameriere.csv'),
     "INVIA_ORDINE": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'invia_ordine.csv'),
     "PRENOTA_TAVOLO": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'prenota_tavolo.csv'),
     "RICHIESTA_ENTRATA": os.path.join(ROOT_DIR, 'db', 'prenotazioni', 'richiesta_entrata.csv'),
@@ -20,10 +20,77 @@ DB = {
     "PAGAMENTI": os.path.join(ROOT_DIR, 'db', 'pagamenti', 'pagamenti.csv'),
 
     "MENU": os.path.join(ROOT_DIR, 'db', 'menu', 'menu.csv'),
+
+    "LOGIN": os.path.join(ROOT_DIR, 'db', 'login', 'login.csv'),
 }
 
 def default_case():
     return "Method not implemented"
+
+def GetUser(payload):
+    """
+    Verifica le credenziali dell'utente nel file login.csv.
+    """
+    result_row = find_row(DB["LOGIN"], {"User": payload["User"], "Password": payload["Password"]})
+    if result_row:
+        return {"result": result_row}
+    else:
+        return {"result": "false"}
+
+def ClientsPrenotazioniTav(payload):
+    """
+    Verifica se un cliente ha prenotato un tavolo.
+    """
+    result_rows = find_rows(DB["PRENOTA_TAVOLO"], {"ClienteID": payload["ClienteID"]})
+    if result_rows:
+        return {"result": result_rows}
+    else:
+        return {"result": "false"}
+
+def InsertCliente(payload):
+    """
+    Inserisce un nuovo cliente nel file delle richieste di entrata.
+    """
+    result_row = find_row(DB["RICHIESTA_ENTRATA"], {"ID": payload["ID"]})
+    if not result_row:
+        insert_row(DB["RICHIESTA_ENTRATA"], [
+            payload["Nome"],
+            payload["Tavolo"],
+            payload["Orario"]
+        ])
+        return {"result": "True"}
+    else:
+        return {"result": "Cliente già esistente"}
+
+def ClientsRichiesteCameriere():
+    """
+    Mostra i tavoli che hanno richiesto il cameriere.
+    """
+    result_rows = find_rows(DB["RICHIESTA_CAMERIERE"])
+    if result_rows:
+        return {"result": result_rows}
+    else:
+        return {"result": "false"}
+
+def ClientsRichiesteMenu(payload):
+    """
+    Mostra i tavoli che hanno richiesto un tipo di menu specifico.
+    """
+    result_rows = find_rows(DB["RICHIESTA_MENU"], {"TipoMenu": payload["TipoMenu"]})
+    if result_rows:
+        return {"result": result_rows}
+    else:
+        return {"result": "false"}
+
+def ClientsRichiesteInvioOrdine():
+    """
+    Visualizza gli ordini da inviare o completati per ogni tavolo.
+    """
+    result_rows = find_rows(DB["INVIA_ORDINE"])
+    if result_rows:
+        return {"result": result_rows}
+    else:
+        return {"result": "false"}
 
 # Funzione per ottenere il menu in base al tipo richiesto
 def GetMenu(menu_type):
@@ -51,7 +118,7 @@ def GetMenu(menu_type):
     else:
         return {"result": "false"}
 
-import datetime
+
 def richiestaCameriere(payload):
     """
     Handles the request to call a waiter for a specific table.
@@ -81,18 +148,6 @@ def GetCliente(payload):
         return {"result": result_row}
     else:
         return {"result": "false"}
-
-
-def GetPanino(payload):
-    """
-    Restituisce i dettagli di un panino dato il suo ID.
-    """
-    result_row = find_row(DB["PANINI"], {"ID": payload["ID"]})
-    if result_row:
-        return {"result": result_row}
-    else:
-        return {"result": "false"}
-
 
 def InsertOrdine(payload):
     """
@@ -156,9 +211,6 @@ def method_switch(method, payload):
         case "GetCliente":
             return GetCliente(payload)
 
-        # Panino
-        case "GetPanino":
-            return GetPanino(payload)
 
         # Ordini
         case "InsertOrdine":
@@ -168,7 +220,19 @@ def method_switch(method, payload):
         case "DeleteOrdiniByTavolo":
             return DeleteOrdiniByTavolo(payload)
 
-    
+        case "GetUser":
+            return GetUser(payload)
+        case "ClientsPrenotazioniTav":
+            return ClientsPrenotazioniTav(payload)
+        case "InsertCliente":
+            return InsertCliente(payload)
+        case "ClientsRichiesteCameriere":
+            return ClientsRichiesteCameriere()
+        case "ClientsRichiesteMenu":
+            return ClientsRichiesteMenu(payload)
+        case "ClientsRichiesteInvioOrdine":
+            return ClientsRichiesteInvioOrdine()
+
         # Caso predefinito per metodi non implementati
         case _:
             return default_case()

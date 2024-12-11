@@ -1,92 +1,95 @@
+import sys
+import csv
 import json
-import os
-from PyQt5.QtWidgets import QMessageBox, QDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem
+from gui.pub.gestione_tavoli_gui import Ui_MainWindow
 from common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
-from gui.pub.gestione_tavoli_gui import Ui_GestioneTavoli
 
-
-class GestioneTavoliLogic(QDialog):
+class GestioneTavoliApp(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_GestioneTavoli()
-        self.ui.setupUi(self)
+        self.setupUi(self)
 
-        # Connessione al server per ottenere i tavoli
-        ROOT_DIR = os.path.abspath(os.curdir)
-        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
-        
-        # Chiamata al server per ottenere la lista dei tavoli
-        response = launchMethod(
-            request_constructor_str(None, "GetTavoli"),
-            server_coords['address'],
-            server_coords['port']
-        )
-        tavoli = json.loads(response).get('result', [])
+        # Load table data from CSV
+        self.load_tavoli_from_csv('db/tavoli.csv')
 
-        # Aggiungere i tavoli alla lista dell'interfaccia
-        for tavolo in tavoli:
-            self.ui.lista_tavoli.addItem(f"Tavolo #{tavolo['id']} - {tavolo['stato']}")
+        # Connect buttons to their respective functions
+        self.pushButton.clicked.connect(self.aggiorna_stato)  # Aggiorna Stato
+        self.pushButton_2.clicked.connect(self.segna_libero)  # Segna Libero
 
-        # Collega il pulsante per aggiornare lo stato del tavolo
-        self.ui.aggiornaStatoButton.clicked.connect(self.aggiornaStato)
+    def load_tavoli_from_csv(self, file_path):
+        try:
+            with open(file_path, mode='r', newline='') as csvfile:
+                reader = csv.DictReader(csvfile)
+                self.tableWidget.setRowCount(0)
+                for row in reader:
+                    self.add_table_row(row)
+        except Exception as e:
+            QMessageBox.critical(self, "Errore", f"Errore nel caricamento del file CSV: {e}")
 
-    def aggiornaStato(self):
-        # Recupero il tavolo selezionato
-        tavolo_selezionato = self.ui.lista_tavoli.currentItem()
-        if not tavolo_selezionato:
+    def add_table_row(self, row):
+        row_position = self.tableWidget.rowCount()
+        self.tableWidget.insertRow(row_position)
+        self.tableWidget.setItem(row_position, 0, QTableWidgetItem(row['ID']))
+        self.tableWidget.setItem(row_position, 1, QTableWidgetItem(row['TavoloID']))
+        self.tableWidget.setItem(row_position, 2, QTableWidgetItem(row['NumeroPosti']))
+        self.tableWidget.setItem(row_position, 3, QTableWidgetItem(row['NumeroPersone']))
+        stato = "Libero" if row['Stato'] == '0' else "Occupato"
+        self.tableWidget.setItem(row_position, 4, QTableWidgetItem(stato))
+
+    def aggiorna_stato(self):
+        selected_row = self.tableWidget.currentRow()
+        if selected_row == -1:
             QMessageBox.warning(self, "Errore", "Seleziona un tavolo per aggiornare lo stato!")
             return
-        
-        tavolo_id = tavolo_selezionato.text().split(" - ")[0].split("#")[1]
-        
-        payload = {
-            "tavolo_id": tavolo_id,
-            "azione": "aggiorna"
-        }
 
-        # Carica le coordinate del server
-        ROOT_DIR = os.path.abspath(os.curdir)
-        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+        stato_item = self.tableWidget.item(selected_row, 4)
+        new_stato = "Occupato" if stato_item.text() == "Libero" else "Libero"
+        self.tableWidget.setItem(selected_row, 4, QTableWidgetItem(new_stato))
 
-        # Invia la richiesta per aggiornare lo stato del tavolo
-        response = launchMethod(
-            request_constructor_str(payload, 'aggiornaStatoTavolo'),
-            server_coords['address'],
-            server_coords['port']
-        )
+        self.save_tavoli_to_csv('db/tavoli.csv')
 
-        # Gestione della risposta dal server
-        res = json.loads(response)
-        
-        if res["result"] == 'OK':
-            QMessageBox.information(None, "Success", "Stato del tavolo aggiornato con successo")
-        else:
-            QMessageBox.warning(None, "Error", "Errore nell'aggiornamento dello stato del tavolo")
-        
-        # A questo punto ricarica i tavoli per mostrare eventuali cambiamenti
-        self.aggiornaListaTavoli()
+    def segna_libero(self):
+        selected_row = self.tableWidget.currentRow()
+        if selected_row == -1:
+            QMessageBox.warning(self, "Errore", "Seleziona un tavolo per segnarlo come libero!")
+            return
 
-def aggiornaListaTavoli(self):
-        # Funzione per ricaricare la lista dei tavoli
-        ROOT_DIR = os.path.abspath(os.curdir)
-        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
-        
-        response = launchMethod(
-            request_constructor_str(None, "GetTavoli"),
-            server_coords['address'],
-            server_coords['port']
-        )
-        tavoli = json.loads(response).get('result', [])
-        
-        self.ui.lista_tavoli.clear()  # Pulisce la lista esistente
-        for tavolo in tavoli:
-            self.ui.lista_tavoli.addItem(f"Tavolo #{tavolo['id']} - {tavolo['stato']}")
+        self.tableWidget.setItem(selected_row, 4, QTableWidgetItem("Libero"))
+        self.save_tavoli_to_csv('db/tavoli.csv')
 
+    def save_tavoli_to_csv(self, file_path):
+        try:
+            with open(file_path, mode='w', newline='') as csvfile:
+                fieldnames = ['ID', 'TavoloID', 'NumeroPosti', 'NumeroPersone', 'Stato']
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writeheader()
+                for row in range(self.tableWidget.rowCount()):
+                    writer.writerow({
+                        'ID': self.tableWidget.item(row, 0).text(),
+                        'TavoloID': self.tableWidget.item(row, 1).text(),
+                        'NumeroPosti': self.tableWidget.item(row, 2).text(),
+                        'NumeroPersone': self.tableWidget.item(row, 3).text(),
+                        'Stato': '0' if self.tableWidget.item(row, 4).text() == "Libero" else '1'
+                    })
+        except Exception as e:
+            QMessageBox.critical(self, "Errore", f"Errore nel salvataggio del file CSV: {e}")
 
-def run():
-    dialog = GestioneTavoliLogic()
-    dialog.exec_()
+    def connect_to_server(self):
+        try:
+            server_config = loadJSONFromFile('server_address.json')
+            response = launchMethod(request_constructor_str(None, "GetTavoli"), server_config['address'], server_config['port'])
+            tavoli = json.loads(response).get('result', [])
+            # Update the GUI with server data if needed
+        except Exception as e:
+            QMessageBox.critical(self, "Errore di connessione", f"Impossibile connettersi al server: {e}")
+
+def main():
+    app = QApplication(sys.argv)
+    window = GestioneTavoliApp()
+    window.show()
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
-    run()
+    main()

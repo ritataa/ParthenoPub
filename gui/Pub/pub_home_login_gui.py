@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gestione_tavoli.ui'
+# Form implementation generated from reading ui file 'pub_home_login.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -17,20 +17,30 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(20, 10, 521, 181))
-        self.tableWidget.setRowCount(5)
-        self.tableWidget.setColumnCount(5)
-        self.tableWidget.setObjectName("tableWidget")
+        self.formLayout = QtWidgets.QFormLayout(self.centralwidget)
+        self.formLayout.setObjectName("formLayout")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        font.setBold(True)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label)
+        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit.setText("")
+        self.lineEdit.setObjectName("lineEdit")
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lineEdit)
+        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_2.setText("")
+        self.lineEdit_2.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.lineEdit_2.setObjectName("lineEdit_2")
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lineEdit_2)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(20, 200, 91, 23))
         self.pushButton.setObjectName("pushButton")
-        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(460, 200, 75, 23))
-        self.pushButton_2.setObjectName("pushButton_2")
+        self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.pushButton)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 24))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -43,8 +53,10 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton.setText(_translate("MainWindow", "Aggiorna Stato"))
-        self.pushButton_2.setText(_translate("MainWindow", "Segna Libero"))
+        self.label.setText(_translate("MainWindow", "Login"))
+        self.lineEdit.setPlaceholderText(_translate("MainWindow", "User"))
+        self.lineEdit_2.setPlaceholderText(_translate("MainWindow", "Password"))
+        self.pushButton.setText(_translate("MainWindow", "Accedi"))
 
 
 if __name__ == "__main__":
