@@ -6,91 +6,11 @@ from PyQt5 import uic
 from common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
 from gui.pub.gestione_prenotazioni_gui import Ui_MainWindow
-class GestionePrenotazioni(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.load_ui()
-        self.setup_connections()
-        self.load_server_config()
-
-    def load_ui(self):
-        uic.loadUi('gestione_prenotazioni.ui', self)
-
-    def setup_connections(self):
-        self.aggiungiPrenotazioneButton.clicked.connect(self.aggiungiPrenotazione)
-        self.modificaPrenotazioneButton.clicked.connect(self.modificaPrenotazione)
-        self.eliminaPrenotazioneButton.clicked.connect(self.eliminaPrenotazione)
-        self.aggiornaElencoButton.clicked.connect(self.load_csv)
-
-    def load_csv(self):
-        try:
-            with open('db/prenota_tavolo.csv', newline='') as csvfile:
-                reader = csv.DictReader(csvfile)
-                self.tabellaPrenotazioni.setRowCount(0)
-                for row in reader:
-                    self.add_row_to_table(row)
-        except FileNotFoundError:
-            QMessageBox.warning(self, "Errore", "File prenota_tavolo.csv non trovato.")
-
-    def add_row_to_table(self, row):
-        row_position = self.tabellaPrenotazioni.rowCount()
-        self.tabellaPrenotazioni.insertRow(row_position)
-        self.tabellaPrenotazioni.setItem(row_position, 0, QTableWidgetItem(row['id']))
-        self.tabellaPrenotazioni.setItem(row_position, 1, QTableWidgetItem(row['cliente']))
-        self.tabellaPrenotazioni.setItem(row_position, 2, QTableWidgetItem(row['data']))
-
-    def save_csv(self):
-        try:
-            with open('db/prenota_tavolo.csv', 'w', newline='') as csvfile:
-                fieldnames = ['id', 'cliente', 'data']
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                writer.writeheader()
-                for row in range(self.tabellaPrenotazioni.rowCount()):
-                    writer.writerow({
-                        'id': self.tabellaPrenotazioni.item(row, 0).text(),
-                        'cliente': self.tabellaPrenotazioni.item(row, 1).text(),
-                        'data': self.tabellaPrenotazioni.item(row, 2).text()
-                    })
-        except Exception as e:
-            QMessageBox.warning(self, "Errore", f"Errore durante il salvataggio: {e}")
-
-    def load_server_config(self):
-        try:
-            server_config = loadJSONFromFile('server_address.json')
-            self.server_address = server_config['address']
-            self.server_port = server_config['port']
-        except Exception as e:
-            QMessageBox.warning(self, "Errore", f"Errore nel caricamento della configurazione del server: {e}")
-
-    def aggiungiPrenotazione(self):
-        # Implement logic to add a reservation
-        pass
-
-    def modificaPrenotazione(self):
-        # Implement logic to modify a reservation
-        pass
-
-    def eliminaPrenotazione(self):
-        # Implement logic to delete a reservation
-        pass
-
-if __name__ == '__main__':
-    import sys
-    app = QApplication(sys.argv)
-    window = GestionePrenotazioni()
-    window.show()
-    sys.exit(app.exec_())
-    import json
-import os
-from PyQt5.QtWidgets import QDialog, QMessageBox
-from common.communication import loadJSONFromFile, request_constructor_str
-from SelMultiplexClient import launchMethod
-from gui.pub.gestione_prenotazioni_gui import Ui_GestionePrenotazioni
 
 class GestionePrenotazioniLogic(QDialog):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_GestionePrenotazioni()
+        self.ui = Ui_MainWindow()
         self.ui.setupUi(self)  # Passa 'self' per associarlo correttamente all'istanza di QDialog
         
         # Collega i pulsanti alle loro funzioni
