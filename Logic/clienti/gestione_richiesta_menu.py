@@ -11,7 +11,6 @@ class GestioneRichiestaMenuLogic(QDialog):
         self.ui = Ui_GestioneRichiestaMenu()
         self.ui.setupUi(self)
 
-        self.current_table_number = table_number  # Set the table number here
 
         # Connect buttons to the method with the appropriate menu type
         self.ui.pushButton.clicked.connect(lambda: self.aggiornaMenu("generale"))
@@ -24,8 +23,11 @@ class GestioneRichiestaMenuLogic(QDialog):
         server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
 
         try:
+            # Retrieve the selected table number from the comboBox
+            table_number = self.ui.comboBox.currentText()
+
             # Construct the payload with the table number and menu type
-            payload = {"numero_tavolo": self.current_table_number, "menu_type": menu_type}
+            payload = {"numero_tavolo": table_number, "menu_type": menu_type}
             res = launchMethod(request_constructor_str("richiestaMenu", payload), server_coords['address'], server_coords['port'])
             res = json.loads(res)
 
@@ -43,8 +45,8 @@ class GestioneRichiestaMenuLogic(QDialog):
         gestione_richiesta_menu.exec_()
 
 def run():
-    table_number = 1  
-    dialog = GestioneRichiestaMenuLogic(table_number)
+
+    dialog = GestioneRichiestaMenuLogic()
     dialog.exec_()
 
 if __name__ == "__main__":
