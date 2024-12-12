@@ -4,7 +4,7 @@ import asyncio
 import json
 
 from common.full_write import full_write
-from common.communication import loadJSONFromFile  # Importa la funzione dal tuo file communication
+from common.communication import loadJSONFromFile  # Importa la funzione dal file communication
 
 MAXLINE = 256
 

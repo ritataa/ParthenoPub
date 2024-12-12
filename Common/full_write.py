@@ -1,6 +1,7 @@
 import errno
 import socket
 
+
 def full_write(fd, buf):
     nleft = len(buf)
     while nleft > 0:
