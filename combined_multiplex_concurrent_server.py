@@ -5,9 +5,9 @@ import json
 import threading
 import time
 
-from common.bcolors import bcolors
-from common.full_write import full_write
-from common.communication import loadJSONFromFile
+from Common.bcolors import bcolors
+from Common.full_write import full_write
+from Common.communication import loadJSONFromFile
 from server_side import method_switch
 
 MAXLINE = 256

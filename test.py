@@ -2,7 +2,7 @@ import csv
 import json
 import os
 
-from common.communication import find_rows_v2
+from Common.communication import find_rows_v2
 
 ROOT_DIR = os.path.abspath(os.curdir)
 

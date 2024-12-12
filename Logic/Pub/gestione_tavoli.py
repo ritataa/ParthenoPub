@@ -3,7 +3,7 @@ import csv
 import json
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem
 from gui.pub.gestione_tavoli_gui import Ui_MainWindow
-from common.communication import loadJSONFromFile, request_constructor_str
+from Common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
 
 class GestioneTavoliApp(QMainWindow, Ui_MainWindow):

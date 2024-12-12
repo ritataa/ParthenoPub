@@ -2,7 +2,7 @@ import csv
 import json
 import os
 from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox, QTableWidgetItem
-from common.communication import loadJSONFromFile, request_constructor_str
+from Common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
 from gui.pub.gestione_ordinazioni_gui import Ui_MainWindow
 

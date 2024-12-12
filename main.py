@@ -2,7 +2,7 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from logic.schermata_iniziale_logic import MainWindow
+from Logic.schermata_iniziale_logic import MainWindow
 
 from multiprocessing import Process
 from combined_multiplex_concurrent_server import server_main

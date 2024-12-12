@@ -3,7 +3,7 @@ import os
 import csv
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication,QDialog, QTableWidgetItem
 from PyQt5 import uic
-from common.communication import loadJSONFromFile, request_constructor_str
+from Common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
 from gui.pub.gestione_prenotazioni_gui import Ui_MainWindow
 

@@ -1,7 +1,7 @@
 import json
 import os
 import datetime
-from common.communication import find_row, find_rows, insert_row, update_row, find_rows_v2, filter_dates_after_current
+from Common.communication import find_row, find_rows, insert_row, update_row, find_rows_v2, filter_dates_after_current
 
 
 # Percorso principale
