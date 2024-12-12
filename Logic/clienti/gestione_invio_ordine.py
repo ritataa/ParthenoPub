@@ -3,7 +3,7 @@ import os
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from Common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
-from gui.clienti.gestione_invio_ordine_client_gui import Ui_MainWindow
+from gui.Clienti.gestione_invio_ordine_client_gui import Ui_MainWindow
 
 class GestioneInvioOrdineLogic(QMainWindow):
     def __init__(self):

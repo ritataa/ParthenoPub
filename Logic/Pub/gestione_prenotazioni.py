@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication,QDialog, QTab
 from PyQt5 import uic
 from Common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
-from gui.pub.gestione_prenotazioni_gui import Ui_MainWindow
+from gui.Pub.gestione_prenotazioni_gui import Ui_MainWindow
 
 class GestionePrenotazioniLogic(QDialog):
     def __init__(self):

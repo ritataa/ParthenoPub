@@ -2,12 +2,12 @@ import os
 import csv
 from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
 from Common.communication import formato_data
-from gui.pub.pub_home_gui import Ui_GestionePub
-from Logic.pub.gestione_richieste_clienti import GestioneRichiesteClientiLogic
-from Logic.pub.gestione_ordinazioni import GestioneOrdinazioniLogic
-from Logic.pub.gestione_pagamenti import GestionePagamentiLogic
-from Logic.pub.gestione_prenotazioni import GestionePrenotazioniLogic
-from Logic.pub.gestione_tavoli import GestioneTavoliApp
+from gui.Pub.pub_home_gui import Ui_GestionePub
+from Logic.Pub.gestione_richieste_clienti import GestioneRichiesteClientiLogic
+from Logic.Pub.gestione_ordinazioni import GestioneOrdinazioniLogic
+from Logic.Pub.gestione_pagamenti import GestionePagamentiLogic
+from Logic.Pub.gestione_prenotazioni import GestionePrenotazioniLogic
+from Logic.Pub.gestione_tavoli import GestioneTavoliApp
 
 class PubHomeLogic(QMainWindow):
     user = None

@@ -1,10 +1,10 @@
 import json
 import os
 from PyQt5 import QtWidgets
-from gui.clienti.cliente_home_gui import Ui_ClienteHome  # Import the generated UI class
-from Logic.clienti.gestione_richiesta_menu import GestioneRichiestaMenuLogic
-from Logic.clienti.gestione_invio_ordine import GestioneInvioOrdineLogic
-from Logic.clienti.gestione_entrata import GestioneEntrataLogic
+from gui.Clienti.cliente_home_gui import Ui_ClienteHome  # Import the generated UI class
+from Logic.Clienti.gestione_richiesta_menu import GestioneRichiestaMenuLogic
+from Logic.Clienti.gestione_invio_ordine import GestioneInvioOrdineLogic
+from Logic.Clienti.gestione_entrata import GestioneEntrataLogic
 
 def load_server_config():
     config_path = os.path.join(os.path.dirname(__file__), '..', '..', 'common', 'server_adress.json')

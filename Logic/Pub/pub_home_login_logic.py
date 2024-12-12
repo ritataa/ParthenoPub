@@ -7,8 +7,8 @@ import os
 
 
 
-from Logic.pub.pub_home_logic import PubHomeLogic
-from gui.pub.pub_home_login_gui import Ui_MainWindow  # Import the generated UI class
+from Logic.Pub.pub_home_logic import PubHomeLogic
+from gui.Pub.pub_home_login_gui import Ui_MainWindow  # Import the generated UI class
 
 def load_server_config():
     config_path = os.path.join(os.path.dirname(__file__), '..', '..', 'common', 'server_adress.json')

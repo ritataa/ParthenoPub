@@ -4,7 +4,7 @@ import csv
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QListWidget, QInputDialog, QMessageBox, QApplication, QTableWidgetItem
 from Common.communication import loadJSONFromFile
 from SelMultiplexClient import launchMethod
-from gui.pub.gestione_richieste_clienti_gui import Ui_Form
+from gui.Pub.gestione_richieste_clienti_gui import Ui_Form
 
 class GestioneRichiesteClientiLogic(QDialog):
     def __init__(self):

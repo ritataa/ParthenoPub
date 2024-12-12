@@ -3,7 +3,7 @@ import os
 from PyQt5.QtWidgets import QDialog, QMessageBox
 from Common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
-from gui.clienti.gestione_richiesta_menu_client_gui import Ui_MainWindow
+from gui.Clienti.gestione_richiesta_menu_client_gui import Ui_MainWindow
 
 class GestioneRichiestaMenuLogic(QDialog):
     def __init__(self,table_number):

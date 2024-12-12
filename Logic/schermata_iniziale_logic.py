@@ -2,8 +2,8 @@ import sys
 import json
 from PyQt5 import QtWidgets
 from gui.schermata_iniziale_gui import Ui_MainWindow
-import Logic.clienti.cliente_home_logic as cliente_logic
-import Logic.pub.pub_home_login_logic as server_logic
+import Logic.Clienti.cliente_home_logic as cliente_logic
+import Logic.Pub.pub_home_login_logic as server_logic
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
