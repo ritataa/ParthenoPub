@@ -44,29 +44,27 @@ class GestioneRichiesteClientiLogic(QDialog):
             stato = self.ui.tableWidget.item(selected_row, 2).text()
             QMessageBox.information(self, "Dettagli Richiesta", f"Numero Tavolo: {numero_tavolo}\nMotivo: {motivo}\nStato: {stato}")
 
-    def segna_come_gestita(self):
-        # Mark the selected request as handled
-        selected_row = self.ui.tableWidget.currentRow()
-        if selected_row != -1:
-            numero_tavolo = self.ui.tableWidget.item(selected_row, 0).text()
-            file_path = os.path.join('db', 'richiesta_cameriere.csv')
-            rows = []
-            with open(file_path, newline='') as csvfile:
-                reader = csv.DictReader(csvfile)
-                for row in reader:
-                    if row['Numero Tavolo'] == numero_tavolo:
-                        row['Stato'] = '1'  # Mark as handled
-                    rows.append(row)
+def segna_come_gestita(self):
+    selected_row = self.ui.tableWidget.currentRow()
+    if selected_row != -1:
+        numero_tavolo = self.ui.tableWidget.item(selected_row, 0).text()
+        file_path = os.path.join('db', 'richiesta_cameriere.csv')
+        rows = []
+        with open(file_path, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if row['Numero Tavolo'] == numero_tavolo:
+                    row['Stato'] = '1'
+                rows.append(row)
 
-            # Write updated data back to CSV
-            with open(file_path, 'w', newline='') as csvfile:
-                fieldnames = ['Numero Tavolo', 'Motivo', 'Stato']
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                writer.writeheader()
-                writer.writerows(rows)
+        with open(file_path, 'w', newline='') as csvfile:
+            fieldnames = ['Numero Tavolo', 'Motivo', 'Stato']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
 
-            self.aggiorna_tabella()
-            QMessageBox.information(self, "Successo", "Richiesta segnata come gestita.")
+        self.aggiorna_tabella()
+        QMessageBox.information(self, "Successo", "Richiesta segnata come gestita.")
 
     def invia_richiesta_al_server(self, action, data):
         # Load server configuration
@@ -85,6 +83,18 @@ class GestioneRichiesteClientiLogic(QDialog):
     def run(self):
         self.exec_()
 
+def richiestaMenu(payload):
+    numero_tavolo = payload["numero_tavolo"]
+    menu_type = payload["menu_type"]
+
+    # Log the request in the CSV file
+    file_path = os.path.join('db', 'richiesta_cameriere.csv')
+    with open(file_path, 'a', newline='') as csvfile:
+        fieldnames = ['Numero Tavolo', 'Motivo', 'Stato']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writerow({'Numero Tavolo': numero_tavolo, 'Motivo': menu_type, 'Stato': '0'})
+
+    return {"stato": "successo"}
 if __name__ == "__main__":
     app = QApplication([])
     window = GestioneRichiesteClientiLogic()

@@ -92,31 +92,23 @@ def ClientsRichiesteInvioOrdine():
     else:
         return {"result": "false"}
 
-# Funzione per ottenere il menu in base al tipo richiesto
-def GetMenu(menu_type):
-    menu_file = DB["MENU"]  # Percorso del file CSV del menu
-    menu_rows = find_rows(menu_file)  # Ottieni tutte le righe del menu
-    
-    if menu_rows:
-        # Restituisci il menu in un formato che il client possa comprendere
-        menu = []
-        for row in menu_rows:
-            # Supponiamo che ogni riga contenga: ID, Nome, Tipo, TipoMenu, Prezzo, Descrizione
-            if row[3].lower() == menu_type.lower():
-                menu.append({
-                "ID": row[0],
-                "Nome": row[1],
-                "Tipo": row[2],
-                "TipoMenu": row[3],
-                "Prezzo": row[4],
-                "Descrizione": row[5]
-            })
-        if menu:
-            return {"result": menu}
-        else:
-            return {"result": "No items found for the requested menu type."}
+
+def GetMenu(payload):
+    """
+    Handles the request to call a waiter when the menu button is pressed.
+    """
+    numero_tavolo = payload["numero_tavolo"]
+
+    # Check if the table exists and is available
+    tavolo_row = find_row(DB["TAVOLI"], {"NumeroTavolo": numero_tavolo})
+    if tavolo_row:
+        # Log the request for a waiter
+        timestamp = datetime.datetime.now().isoformat()
+        insert_row(DB["RICHIESTA_CAMERIERE"], [numero_tavolo, "Richiesta cameriere", timestamp])
+
+        return {"result": "successo", "messaggio": "Cameriere chiamato"}
     else:
-        return {"result": "false"}
+        return {"result": "errore", "messaggio": "Tavolo non trovato"}
 
 
 def richiestaCameriere(payload):

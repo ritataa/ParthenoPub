@@ -6,10 +6,12 @@ from SelMultiplexClient import launchMethod
 from gui.clienti.gestione_richiesta_menu_client_gui import Ui_GestioneRichiestaMenu
 
 class GestioneRichiestaMenuLogic(QDialog):
-    def __init__(self):
+    def __init__(self,table_number):
         super().__init__()
         self.ui = Ui_GestioneRichiestaMenu()
         self.ui.setupUi(self)
+
+        self.current_table_number = table_number  # Set the table number here
 
         # Connect buttons to the method with the appropriate menu type
         self.ui.pushButton.clicked.connect(lambda: self.aggiornaMenu("generale"))
@@ -17,29 +19,32 @@ class GestioneRichiestaMenuLogic(QDialog):
         self.ui.pushButton_3.clicked.connect(lambda: self.aggiornaMenu("dolci"))
 
     def aggiornaMenu(self, menu_type):
-        """Request the menu from the server and update the list in the GUI."""
+        """Send a request to the server for the specified menu type."""
         ROOT_DIR = os.path.abspath(os.curdir)
         server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
 
         try:
-            # Request the menu from the server
-            payload = {"menu_type": menu_type}
-            res = launchMethod(request_constructor_str("GetMenu", payload), server_coords['address'], server_coords['port'])
+            # Construct the payload with the table number and menu type
+            payload = {"numero_tavolo": self.current_table_number, "menu_type": menu_type}
+            res = launchMethod(request_constructor_str("richiestaMenu", payload), server_coords['address'], server_coords['port'])
             res = json.loads(res)
 
-            # Update the menu list
-            self.ui.lista_menu.clear()
-            if "result" in res and isinstance(res["result"], list):
-                for item in res["result"]:
-                    self.ui.lista_menu.addItem(f"{item['Nome']} - {item['Prezzo']}€")
+            if res["stato"] == "successo":
+                QMessageBox.information(self, "Successo", f"Richiesta per il menu {menu_type} inviata con successo.")
             else:
-                QMessageBox.warning(self, "Errore", f"Impossibile ottenere il menu: {res['result']}")
+                QMessageBox.warning(self, "Errore", res["messaggio"])
 
         except Exception as e:
-            QMessageBox.warning(self, "Errore", f"Impossibile aggiornare il menu: {e}")
+            QMessageBox.warning(self, "Errore", f"Impossibile inviare la richiesta: {e}")
+
+    def open_richiesta_menu(self):
+        table_number = self.get_current_table_number()  # Implement this method to get the current table number
+        gestione_richiesta_menu = GestioneRichiestaMenuLogic(table_number)
+        gestione_richiesta_menu.exec_()
 
 def run():
-    dialog = GestioneRichiestaMenuLogic()
+    table_number = 1  
+    dialog = GestioneRichiestaMenuLogic(table_number)
     dialog.exec_()
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_GestioneRichiestaMenu(object):
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -47,6 +47,35 @@ class Ui_GestioneRichiestaMenu(object):
         font.setFamily("Poppins")
         self.textEdit.setFont(font)
         self.textEdit.setObjectName("textEdit")
+        self.comboBox = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox.setGeometry(QtCore.QRect(510, 300, 103, 32))
+        self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.textEdit_2 = QtWidgets.QTextEdit(self.centralwidget)
+        self.textEdit_2.setGeometry(QtCore.QRect(430, 260, 111, 31))
+        font = QtGui.QFont()
+        font.setFamily("Poppins")
+        self.textEdit_2.setFont(font)
+        self.textEdit_2.setObjectName("textEdit_2")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 24))
@@ -73,13 +102,41 @@ class Ui_GestioneRichiestaMenu(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:\'Poppins\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'.AppleSystemUIFont\'; font-weight:700;\">MENU</span></p></body></html>"))
+        self.comboBox.setItemText(0, _translate("MainWindow", "1"))
+        self.comboBox.setItemText(1, _translate("MainWindow", "2"))
+        self.comboBox.setItemText(2, _translate("MainWindow", "3"))
+        self.comboBox.setItemText(3, _translate("MainWindow", "4"))
+        self.comboBox.setItemText(4, _translate("MainWindow", "5"))
+        self.comboBox.setItemText(5, _translate("MainWindow", "6"))
+        self.comboBox.setItemText(6, _translate("MainWindow", "7"))
+        self.comboBox.setItemText(7, _translate("MainWindow", "8"))
+        self.comboBox.setItemText(8, _translate("MainWindow", "9"))
+        self.comboBox.setItemText(9, _translate("MainWindow", "10"))
+        self.comboBox.setItemText(10, _translate("MainWindow", "11"))
+        self.comboBox.setItemText(11, _translate("MainWindow", "12"))
+        self.comboBox.setItemText(12, _translate("MainWindow", "13"))
+        self.comboBox.setItemText(13, _translate("MainWindow", "14"))
+        self.comboBox.setItemText(14, _translate("MainWindow", "15"))
+        self.comboBox.setItemText(15, _translate("MainWindow", "16"))
+        self.comboBox.setItemText(16, _translate("MainWindow", "17"))
+        self.comboBox.setItemText(17, _translate("MainWindow", "18"))
+        self.comboBox.setItemText(18, _translate("MainWindow", "19"))
+        self.comboBox.setItemText(19, _translate("MainWindow", "20"))
+        self.textEdit_2.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Poppins\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">TAVOLO</p></body></html>"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_GestioneRichiestaMenu()
+    ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

@@ -37,6 +37,11 @@ class ClienteHomeLogic(QtWidgets.QMainWindow):
         gestione_entrata = GestioneEntrataLogic()
         gestione_entrata.exec_()
 
+    def get_current_table_number(self):
+    # Implement logic to retrieve the current table number
+    # For example, return a hardcoded value or retrieve it from a UI element
+        return 1  # Replace with actual logic
+
 def main():
     app = QtWidgets.QApplication([])
     window = ClienteHomeLogic()
