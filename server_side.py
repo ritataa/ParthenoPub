@@ -31,11 +31,17 @@ def GetUser(payload):
     """
     Verifica le credenziali dell'utente nel file login.csv.
     """
-    result_row = find_row(DB["LOGIN"], {"User": payload["User"], "Password": payload["Password"]})
+    result_row = find_row(DB["LOGIN"], {"User": payload["User"]})
     if result_row:
-        return {"result": result_row}
+        if "Password" in payload:
+            if str(result_row[4]) == str(payload["Password"]):
+                return result_row
+            else:
+                return False
+        else:
+            return False
     else:
-        return {"result": "false"}
+        return False
 
 def ClientsPrenotazioniTav(payload):
     """
@@ -141,24 +147,29 @@ def GetCliente(payload):
     else:
         return {"result": "false"}
 
-def InsertOrdine(payload):
-    """
-    Inserisce un nuovo ordine per un tavolo specifico.
-    L'ordine include i dettagli del cliente, i panini ordinati e il totale.
-    """
-    order_id = payload["ID"]
-    result_row = find_row(DB["ORDINI"], {"ID": order_id})
-    if result_row:
-        return {"result": "Ordine già esistente"}
+def InsertMenuGen():
+    
+    mgen = find_rows(DB["MGEN"])
+    if len(mgen) > 0:
+        return {"result": mgen}
     else:
-        insert_row(DB["ORDINI"], [
-            payload["ID"],  # ID ordine
-            payload["Tavolo"],  # Numero del tavolo
-            payload["ClienteID"],  # ID del cliente
-            payload["Panini"],  # Panini ordinati
-            payload["Totale"]  # Totale ordine
-        ])
-        return {"result": "Ordine inserito con successo"}
+        return {"result": "not found"}
+    
+def InsertMenuBirre():
+    
+    mbirre = find_rows(DB["MBIRRE"])
+    if len(mbirre) > 0:
+        return {"result": mbirre}
+    else:
+        return {"result": "not found"}
+    
+def InsertMenuDolci():
+    
+    mdolci = find_rows(DB["MDOLCI"])
+    if len(mdolci) > 0:
+        return {"result": mdolci}
+    else:
+        return {"result": "not found"}
 
 
 def GetOrdiniByTavolo(payload):
@@ -205,8 +216,12 @@ def method_switch(method, payload):
 
 
         # Ordini
-        case "InsertOrdine":
-            return InsertOrdine(payload)
+        case "InsertMenuGen":
+            return InsertMenuGen(payload)
+        case "InsertMenuBirre":
+            return InsertMenuBirre(payload)
+        case "InsertMenuDolci":
+            return InsertMenuDolci(payload)
         case "GetOrdiniByTavolo":
             return GetOrdiniByTavolo(payload)
         case "DeleteOrdiniByTavolo":
