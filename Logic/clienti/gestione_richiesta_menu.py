@@ -11,6 +11,9 @@ class GestioneRichiestaMenuLogic(QDialog):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        # Store the table number
+        self.table_number = table_number
+
 
         # Connect buttons to the method with the appropriate menu type
         self.ui.pushButton.clicked.connect(lambda: self.aggiornaMenu("generale"))
@@ -24,7 +27,7 @@ class GestioneRichiestaMenuLogic(QDialog):
 
         try:
             # Retrieve the selected table number from the comboBox
-            table_number = self.ui.comboBox.currentText()
+            table_number = self.table_number
 
             # Construct the payload with the table number and menu type
             payload = {"numero_tavolo": table_number, "menu_type": menu_type}
@@ -38,11 +41,6 @@ class GestioneRichiestaMenuLogic(QDialog):
 
         except Exception as e:
             QMessageBox.warning(self, "Errore", f"Impossibile inviare la richiesta: {e}")
-
-    def open_richiesta_menu(self):
-        table_number = self.get_current_table_number()  # Implement this method to get the current table number
-        gestione_richiesta_menu = GestioneRichiestaMenuLogic(table_number)
-        gestione_richiesta_menu.exec_()
 
 def run():
 

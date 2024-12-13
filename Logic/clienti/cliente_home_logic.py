@@ -26,6 +26,7 @@ class ClienteHomeLogic(QtWidgets.QMainWindow):
         self.ui.btn_prenota_entrata.clicked.connect(self.open_prenota_entrata)
 
     def open_richiesta_menu(self):
+        table_number = self.get_current_table_number(table_number)
         gestione_richiesta_menu = GestioneRichiestaMenuLogic()
         gestione_richiesta_menu.exec_()
 
@@ -37,10 +38,10 @@ class ClienteHomeLogic(QtWidgets.QMainWindow):
         gestione_entrata = GestioneEntrataLogic()
         gestione_entrata.exec_()
 
-    def get_current_table_number(self):
-    # Implement logic to retrieve the current table number
-    # For example, return a hardcoded value or retrieve it from a UI element
-        return 1  # Replace with actual logic
+def get_current_table_number(self):
+        
+        return self.ui.comboBox.currentText()
+
 
 def main():
     app = QtWidgets.QApplication([])

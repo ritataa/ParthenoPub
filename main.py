@@ -1,6 +1,8 @@
+import os
+
 import sys
 
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QWidget
 
 from Logic.schermata_iniziale_logic import MainWindow
 
@@ -20,7 +22,7 @@ def main():
     initial_window.show()
     app.exec_()
 
-    app.exec_()
+
 
 
 if __name__ == "__main__":
