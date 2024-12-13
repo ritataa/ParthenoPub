@@ -99,14 +99,14 @@ def request_constructor_str(input_object, header):
     return json.dumps(request_constructor_obj(input_object, header))
 
 
-def custom_hash(text: str):
+def customHash(text: str):
     """
     Funzione di hashing personalizzata per generare un hash per il testo fornito.
     """
-    hash_value = 0
+    hash = 0
     for ch in text:
-        hash_value = (hash_value * 281 ^ ord(ch) * 997) & 0xFFFFFFFF
-    return hash_value
+        hash = (hash * 281 ^ ord(ch) * 997) & 0xFFFFFFFF
+    return hash
 
 # Funzione per caricare l'indirizzo e la porta del server dal file JSON
 def loadJSONFromFile(json_file):
