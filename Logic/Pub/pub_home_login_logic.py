@@ -15,7 +15,7 @@ from gui.Pub.pub_home_login_gui import Ui_MainWindow  # Import the generated UI 
 
 
 
-class PubHomeLoginLogic(QtWidgets.QMainWindow):
+class PubHomeLoginLogic(QMainWindow):
 
     show_pub_home = pyqtSignal()
     user = []
@@ -34,48 +34,37 @@ class PubHomeLoginLogic(QtWidgets.QMainWindow):
 
         password = str(customHash(self.ui.PasswordField.text()))
         username = self.ui.UserField.text()
-        combobox = self.ui.ComboBoxSelect.currentText()
-        result = None
         
-        if combobox == "Students":
-            toSend = {"Matricola": username, "Password": password}
-            result = launchMethod(request_constructor_str(toSend, "StudentsLogin"), server_coords['address'], server_coords['port'])
+        # Construct the payload for the server
+        toSend = {"User": username, "Password": password}
 
-        elif combobox == "Office":
-            toSend = {"Email": username, "Password": password}
-            result = launchMethod(request_constructor_str(toSend, "OfficeLogin"), server_coords['address'], server_coords['port'])
+        # Send the request to the server using the "GetUser" method
+        result = launchMethod(request_constructor_str(toSend, "GetUser"), server_coords['address'], server_coords['port'])
 
-        result = result.replace("\n", "")
-        result = result.replace("\r", "")
+        # Clean up the result string
+        result = result.replace("\n", "").replace("\r", "")
+
+        # Check the result and display appropriate messages
         if result == "false":
-            QMessageBox.critical(None, "Login - Error",
-                                "Email, Password or User type incorrect.\nCheck your info and retry.")
+                QMessageBox.critical(self, "Login - Error", "Username or Password incorrect. Please try again.")
         else:
             try:
-                if combobox == "Students":
-                    self.openStudentHomeWindow(result)
-                if combobox == "Office":
-                    self.openSegreteriaHomeWindow(result)
+                self.open_pub_home_window(result)
             except Exception as e:
-                print(e)
-    def show_error_message(self, message):
-        QMessageBox.critical(self, "Login Error", message)
+                QMessageBox.critical(self, "Error", f"An error occurred: {e}")
 
-    def open_pub_home(self, user_id, username):
-        self.hide()  # Hide the login window
-        user_info = {
-            "id": user_id,
-            "name": username  # Only include the username and user_id
-        }
-        self.pub_home = PubHomeLogic(user_info)
-        self.pub_home.show()
 
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    login_window = PubHomeLoginLogic()
-    login_window.show()
+    
+    def open_pub_home_window(self, user):
+        self.user = json.loads(user)
+        self.show_pub_home.emit()
+        self.close()
+
+def run():
+    app = QApplication(sys.argv)
+    window = PubHomeLoginLogic()
+    window.show()
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
-    main()
-
+    run()

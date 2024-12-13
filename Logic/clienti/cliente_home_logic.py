@@ -1,53 +1,42 @@
-import json
-import os
-from PyQt5 import QtWidgets
-from gui.Clienti.cliente_home_gui import Ui_ClienteHome  # Import the generated UI class
+from PyQt5.QtWidgets import QMainWindow
+
+from gui.Clienti.cliente_home_gui import Ui_ClienteHome 
 from Logic.Clienti.gestione_richiesta_menu import GestioneRichiestaMenuLogic
 from Logic.Clienti.gestione_invio_ordine import GestioneInvioOrdineLogic
 from Logic.Clienti.gestione_entrata import GestioneEntrataLogic
 
-def load_server_config():
-    config_path = os.path.join(os.path.dirname(__file__), '..', '..', 'common', 'server_adress.json')
-    with open(config_path, 'r') as file:
-        return json.load(file)
 
-class ClienteHomeLogic(QtWidgets.QMainWindow):
-    def __init__(self):
+class ClienteHomeLogic(QMainWindow):
+    user = None
+
+    def __init__(self,user):
+        self.user = user
         super().__init__()
-        self.ui = Ui_ClienteHome()  # Create an instance of the UI class
-        self.ui.setupUi(self)  # Set up the UI
+        self.ui = Ui_ClienteHome()  
+        self.ui.setupUi(self)  
 
-        # Load server configuration
-        self.server_config = load_server_config()
+        self.ui.pushButton_richiedi_menu.clicked.connect(self.showRichiestaMenu)
+        self.ui.pushButton_prenota_entrata.clicked.connect(self.showPrenotaEntrata)
+        self.ui.pushButton_invia_ordine.clicked.connect(self.showInviaOrdine)
 
-        # Connect buttons to their respective functions
-        self.ui.btn_richiedi_menu.clicked.connect(self.open_richiesta_menu)
-        self.ui.btn_invia_ordine.clicked.connect(self.open_invio_ordine)
-        self.ui.btn_prenota_entrata.clicked.connect(self.open_prenota_entrata)
-
-    def open_richiesta_menu(self):
-        table_number = self.get_current_table_number(table_number)
-        gestione_richiesta_menu = GestioneRichiestaMenuLogic()
-        gestione_richiesta_menu.exec_()
-
-    def open_invio_ordine(self):
-        gestione_invio_ordine = GestioneInvioOrdineLogic()
-        gestione_invio_ordine.exec_()
-
-    def open_prenota_entrata(self):
-        gestione_entrata = GestioneEntrataLogic()
-        gestione_entrata.exec_()
-
-def get_current_table_number(self):
-        
-        return self.ui.comboBox.currentText()
+    def showRichiestaMenu(self):
+        dialog = GestioneRichiestaMenuLogic()
+        dialog.exec_()
 
 
-def main():
-    app = QtWidgets.QApplication([])
-    window = ClienteHomeLogic()
+    def showPrenotaEntrata(self):
+        dialog = GestioneEntrataLogic()
+        dialog.exec_()
+
+    def showInviaOrdine(self):
+        dialog = GestioneInvioOrdineLogic()
+        dialog.exec_()
+
+
+
+def run(user):
+    window = ClienteHomeLogic(user)
     window.show()
-    app.exec_()
 
 if __name__ == "__main__":
-    main()
+    run()
