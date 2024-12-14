@@ -1,7 +1,7 @@
 ID,Nome,Prezzo
-1,Birra chiara,4.50
-2,Birra scura,5.00
-3,Birra rossa,5.50
-4,Birra IPA,6.00
-5,Birra Weiss,5.50
-6,Stout,6.00
+BC,Birra chiara,4.50
+BS,Birra scura,5.00
+BR,Birra rossa,5.50
+BI,Birra IPA,6.00
+BW,Birra Weiss,5.50
+S,Stout,6.00

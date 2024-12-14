@@ -1,7 +1,7 @@
 ID,Nome,Prezzo
-1,Tiramisù,6.00
-2,Cheesecake,5.50
-3,Profiteroles,5.50
-4,Crostata di frutta,4.50
-5,Semifreddo,4.00
-6,Caprese,5.00
+TRMS,Tiramisù,6.00
+CSCK,Cheesecake,5.50
+PRFTRLS,Profiteroles,5.50
+CDF,Crostata di frutta,4.50
+SMFRD,Semifreddo,4.00
+CPRS,Caprese,5.00

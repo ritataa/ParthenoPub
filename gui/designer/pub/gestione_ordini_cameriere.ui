@@ -41,43 +41,7 @@
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="10" column="0">
-     <widget class="QLabel" name="label_menuDolci">
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>menu dolci</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="0">
-     <widget class="QLabel" name="label_menuBirre">
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>menu birre</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="2">
-     <widget class="QLabel" name="label_quantita">
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>quantità</string>
-      </property>
-     </widget>
-    </item>
-    <item row="10" column="2">
+    <item row="9" column="2">
      <widget class="QLabel" name="label_quantita_3">
       <property name="font">
        <font>
@@ -89,78 +53,51 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="3">
-     <widget class="QComboBox" name="comboBox_quantita_2">
+    <item row="4" column="1">
+     <widget class="QComboBox" name="comboBox_nomeMenuGen">
       <item>
        <property name="text">
-        <string>0</string>
+        <string>New Item</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>1</string>
+        <string>[RT] Reti - 12.50 EURO</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>2</string>
+        <string>[IDS] Ingegneria del software - 8.00 EURO</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>3</string>
+        <string>[ADC] Architettura dei calcolatori - 10.00 EURO</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>4</string>
+        <string>[ASD] ASD - 14.00</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>5</string>
+        <string>[MT1] Mate1 - 7.50</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>6</string>
+        <string>[BDD] Basi di dati - 9.00</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>7</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>9</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>10</string>
+        <string>[SO] Sistemi operativi -11.00</string>
        </property>
       </item>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_ID">
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>ID</string>
-      </property>
-     </widget>
-    </item>
-    <item row="10" column="3">
+    <item row="9" column="3">
      <widget class="QComboBox" name="comboBox_quantita_3">
       <item>
        <property name="text">
@@ -219,7 +156,31 @@
       </item>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="7" column="2">
+     <widget class="QLabel" name="label_quantita_2">
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>quantità</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLabel" name="label_menuDolci">
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>menu dolci</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
      <widget class="QComboBox" name="comboBox_tavolo">
       <item>
        <property name="text">
@@ -328,8 +289,8 @@
       </item>
      </widget>
     </item>
-    <item row="8" column="2">
-     <widget class="QLabel" name="label_quantita_2">
+    <item row="4" column="2">
+     <widget class="QLabel" name="label_quantita">
       <property name="font">
        <font>
         <pointsize>15</pointsize>
@@ -340,46 +301,7 @@
       </property>
      </widget>
     </item>
-    <item row="10" column="1">
-     <widget class="QComboBox" name="comboBox_nomeDolci">
-      <item>
-       <property name="text">
-        <string>New Item</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Tiramisu</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Cheesecake</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Profit</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Crostata</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Semifreddo</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Caprese</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="5" column="3">
+    <item row="4" column="3">
      <widget class="QComboBox" name="comboBox_quantita">
       <item>
        <property name="text">
@@ -438,8 +360,71 @@
       </item>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QComboBox" name="comboBox_ID">
+    <item row="9" column="1">
+     <widget class="QComboBox" name="comboBox_nomeDolci">
+      <item>
+       <property name="text">
+        <string>New Item</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[TRMS] Tiramisù - 6.00 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[CSCK] Cheesecake -5.50 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[PRFTRLS] Profiteroles - 5.50 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[CDF] Crostata di frutta - 4.50 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[SMFRD] Semifreddo - 4.00 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[CPRS] Caprese - 5.00 EURO</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_menuGen">
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>menu generale</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_menuBirre">
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>menu birre</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="3">
+     <widget class="QComboBox" name="comboBox_quantita_2">
       <item>
        <property name="text">
         <string>0</string>
@@ -497,7 +482,46 @@
       </item>
      </widget>
     </item>
-    <item row="3" column="0">
+    <item row="7" column="1">
+     <widget class="QComboBox" name="comboBox_nomeBirre">
+      <item>
+       <property name="text">
+        <string>New Item</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[BC] Birra chiara - 4.50 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[BS] Birra scura - 5.00 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[BR] Birra rossa - 5.50 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[BI] Birra IPA - 6.00 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[BW] Birra Weiss - 5.50 EURO</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>[S] Stout - 6.00 EURO</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="2" column="0">
      <widget class="QLabel" name="label_tavolo">
       <property name="font">
        <font>
@@ -507,101 +531,6 @@
       <property name="text">
        <string>tavolo</string>
       </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_menuGen">
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>menu generale</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
-     <widget class="QComboBox" name="comboBox_nomeMenuGen">
-      <item>
-       <property name="text">
-        <string>New Item</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Reti</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Ingegneria</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Architettura</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>ASD</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Mate1</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Basi</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Sistemi</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="8" column="1">
-     <widget class="QComboBox" name="comboBox_nomeBirre">
-      <item>
-       <property name="text">
-        <string>New Item</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Chiara</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Scura</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Rossa</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>IPA</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Weiss</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Stout</string>
-       </property>
-      </item>
      </widget>
     </item>
    </layout>
@@ -623,25 +552,6 @@
    </property>
    <property name="text">
     <string>Invia</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_aggRichiesta">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>540</y>
-     <width>161</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>15</pointsize>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>Aggiungi Richiesta</string>
    </property>
   </widget>
  </widget>

@@ -27,6 +27,16 @@ DB = {
 def default_case():
     return "Method not implemented"
 
+def GetTavolo(payload):
+    """
+    Restituisce i dettagli di un tavolo dato il suo numero.
+    """
+    result_row = find_row(DB["TAVOLI"], {"TavoloID": payload["TavoloID"]})
+    if result_row:
+        return {"result": result_row}
+    else:
+        return {"result": "false"}
+    
 def GetUser(payload):
     """
     Verifica le credenziali dell'utente nel file login.csv.
@@ -194,6 +204,14 @@ def DeleteOrdiniByTavolo(payload):
         return {"result": "Ordini eliminati con successo"}
     else:
         return {"result": "false"}
+    
+def inviaOrdine(payload):
+    try:
+        insert_row(csv_file=DB["INVIA_ORDINE"],
+                data_row=[payload["TavoloID"], payload["ordineG"], payload["quantG"], payload["ordineB"], payload["quantB"], payload["ordineD"], payload["quantD"]])
+        return {"result": "OK"}
+    except Exception as e:
+        return {"result": f"Not OK error: {e}"}
 
 
 
@@ -222,6 +240,8 @@ def method_switch(method, payload):
             return InsertMenuBirre(payload)
         case "InsertMenuDolci":
             return InsertMenuDolci(payload)
+        case "inviaOrdine":
+            return inviaOrdine(payload)
         case "GetOrdiniByTavolo":
             return GetOrdiniByTavolo(payload)
         case "DeleteOrdiniByTavolo":
