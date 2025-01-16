@@ -78,9 +78,25 @@ class GestioneOrdinazioniLogic(QDialog):
         self.Aggiorna()
 
     def transferToPagamenti(self, ID: str):
-        # Logic to transfer the order to gestioni_pagamenti
-        # This could involve writing to a file or database
-        pass
+    
+        ROOT_DIR = os.path.abspath(os.curdir)
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+        row = launchMethod(request_constructor_str({"ID":ID, "Stato":"1"}, "AggiornaStatoOrdine"), server_coords['address'], server_coords['port'])
+        row = json.loads(row)
+        
+
+    def clearTableView(self):
+        while self.ui.TableView.count():
+            item = self.ui.TableView.takeAt(0)
+            if item:
+                widget = item.widget()
+                if widget:
+                    widget.deleteLater()
+                else:
+                    layout = item.layout()
+                    if layout:
+                        self.clearLayout(layout)
+
 
     def clearTableView(self):
         # Remove all layouts from TableView
