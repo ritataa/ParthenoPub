@@ -3,14 +3,14 @@ import json
 import os
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox,QDialog, QTableWidgetItem
 from Common.communication import loadJSONFromFile, request_constructor_str 
-from gui.Pub.gestione_pagamenti_gui import Ui_Gestione_Pagamenti
+from gui.Pub.gestione_pagamenti_gui import Ui_MainWindow
 from SelMultiplexClient import launchMethod
 
 
 class GestionePagamentiLogic(QDialog):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_Gestione_Pagamenti()
+        self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
         # Carica la configurazione del server

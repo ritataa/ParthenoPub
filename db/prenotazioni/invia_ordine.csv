@@ -1,24 +1,24 @@
 
-ID,TavoloID,ordineG,quantG,ordineB,quantB,ordineD,quantD
+ID,TavoloID,ordineG,quantG,ordineB,quantB,ordineD,quantD,Stato
 
 # tavolo 1 = 2 persone
-1,1,RT,1,BC,1,0,0
-2,1,SO,1,BS,1,0,0
+1,1,RT,1,BC,1,0,0,1
+2,1,SO,1,BS,1,0,0,0
 
 
 # tavolo 3 = 2 persone
-3,3,IDS,1,BR,1,0,0
-4,3,MT1,1,BC,1,0,0
+3,3,IDS,1,BR,1,0,0,1
+4,3,MT1,1,BC,1,0,0,1
 
 
 # tavolo 4 = 4 persone
-5,4,ADC,1,BC,1,0,0
-6,4,ADC,1,BS,1,0,0
-7,4,BDD,1,BI,1,0,0
-8,4,SO,1,S,1,0,0
+5,4,ADC,1,BC,1,0,0,0
+6,4,ADC,1,BS,1,0,0,0
+7,4,BDD,1,BI,1,0,0,1
+8,4,SO,1,S,1,0,0,1
 
 
 # tavolo 5 = 3 persone
-9,5,ADC,1,BC,1,0,0
-10,5,ASD,1,BW,1,0,0
-11,5,RT,1,BS,1,0,0
+9,5,ADC,1,BC,1,0,0,0
+10,5,ASD,1,BW,1,0,0,0
+11,5,RT,1,BS,1,0,0,0

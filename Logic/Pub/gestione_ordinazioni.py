@@ -1,73 +1,106 @@
 import json
 import os
-from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox, QTableWidgetItem
+from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QPushButton, QVBoxLayout, \
+    QHBoxLayout
 from Common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
-from gui.Pub.gestione_ordinazioni_gui import Ui_MainWindow
+from gui.Pub.gestione_ordinazioni_gui import Ui_GestioneOrdinazioni
 
 class GestioneOrdinazioniLogic(QDialog):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_MainWindow()
+        self.ui = Ui_GestioneOrdinazioni()
         self.ui.setupUi(self)
 
-        # Load server configuration
-        ROOT_DIR = os.path.abspath(os.curdir)
-        self.server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
-
-        # Load initial data
-        self.loadOrders()
-
         # Connect buttons to their respective functions
-        self.ui.aggiornaTabellaButton.clicked.connect(self.loadOrders)
-        self.ui.segnaComeArrivatoButton.clicked.connect(self.markAsArrived)
+        self.ui.AggiornaButton.clicked.connect(self.Aggiorna)
 
-    def loadOrders(self):
-        # Request orders from the server
-        try:
-            response = launchMethod(request_constructor_str(None, "GetOrdini"), self.server_coords['address'], self.server_coords['port'])
-            orders = json.loads(response).get("result", [])
+        self.data = None
+        self.Aggiorna()
+    
 
-            self.ui.tabellaOrdini.setRowCount(0)
-            for order in orders:
-                rowPosition = self.ui.tabellaOrdini.rowCount()
-                self.ui.tabellaOrdini.insertRow(rowPosition)
-                self.ui.tabellaOrdini.setItem(rowPosition, 0, QTableWidgetItem(order['ID']))
-                self.ui.tabellaOrdini.setItem(rowPosition, 1, QTableWidgetItem(order['Tavolo']))
-                self.ui.tabellaOrdini.setItem(rowPosition, 2, QTableWidgetItem(order['Nome']))
-                self.ui.tabellaOrdini.setItem(rowPosition, 3, QTableWidgetItem(order['Tipo']))
-                self.ui.tabellaOrdini.setItem(rowPosition, 4, QTableWidgetItem(order['Prezzo']))
-                self.ui.tabellaOrdini.setItem(rowPosition, 5, QTableWidgetItem(order['Stato']))
-        except Exception as e:
-            QMessageBox.warning(self, "Error", f"Errore nel caricamento degli ordini: {e}")
+    def Aggiorna(self):
 
-    def markAsArrived(self):
-        # Mark selected order as arrived
-        selected_row = self.ui.tabellaOrdini.currentRow()
-        if selected_row == -1:
-            QMessageBox.warning(self, "Error", "Seleziona un ordine per segnarlo come arrivato.")
-            return
+        ROOT_DIR = os.path.abspath(os.curdir)
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+    
+        rows = launchMethod(request_constructor_str({}, "ClientsRichiesteInvioOrdine"), server_coords['address'], server_coords['port'])
+        rows = json.loads(rows)
 
-        order_id = self.ui.tabellaOrdini.item(selected_row, 0).text()
-        self.ui.tabellaOrdini.setItem(selected_row, 5, QTableWidgetItem('1'))
+        if rows["result"] == "false":
+            QMessageBox.information(self, "Attenzione", "Nessuna ordinazione disponibile")
+            self.data = None
+        else:
+            if self.data == None:
+                for r in rows["result"]:
+                    self.createRow(r)
+                self.data = rows
+            elif self.data != rows:
+                self.data = rows
+                self.clearTableView()
+                for r in rows["result"]:
+                    self.createRow(r)
 
-        # Send update to the server
-        payload = {"order_id": order_id, "stato": "1"}
-        try:
-            response = launchMethod(request_constructor_str(payload, "AggiornaOrdine"), self.server_coords['address'], self.server_coords['port'])
-            result = json.loads(response).get("result")
+    def createRow(self, data):
+        layout = QHBoxLayout()
 
-            if result == "OK":
-                QMessageBox.information(self, "Successo", "Ordine aggiornato con successo!")
+        print(data)
+
+        del data[3]
+        for d in data[1:]:
+            layout.addWidget(QLabel(d))
+
+        button_layout = QVBoxLayout()
+
+        newButton_approve = QPushButton("Consegnato")
+        newButton_approve.clicked.connect(lambda: self.SegnaConsegnato(data[0]))
+        button_layout.addWidget(newButton_approve)
+
+        
+        layout.addLayout(button_layout)
+
+        # Set the layout of the widget
+        self.ui.TableView.addLayout(layout)
+
+    def SegnaConsegnato(self, ID:str):
+        ROOT_DIR = os.path.abspath(os.curdir)
+        server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+        row = launchMethod(request_constructor_str({"ID":ID, "Stato":"1"}, "AggiornaStatoOrdine"), server_coords['address'], server_coords['port'])
+        row = json.loads(row)
+
+        if row.get("result") == "success":
+            QMessageBox.information(None, "Consegnato - Successo", "Ordine consegnato con successo")
+            self.transferToPagamenti(ID)
+        else:
+            QMessageBox.warning(None, "Errore", "Errore nell'aggiornamento dello stato dell'ordine")
+
+        self.clearTableView()
+        self.Aggiorna()
+
+    def transferToPagamenti(self, ID: str):
+        # Logic to transfer the order to gestioni_pagamenti
+        # This could involve writing to a file or database
+        pass
+
+    def clearTableView(self):
+        # Remove all layouts from TableView
+        while self.ui.TableView.count():
+            item = self.ui.TableView.takeAt(0)
+            if item:
+                widget = item.widget()
+                if widget:
+                    widget.deleteLater()
+                else:
+                    layout = item.layout()
+                    if layout:
+                        # Recursively clear layout's items
+                        self.clearLayout(layout)
+
+    def clearLayout(self, layout):
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
             else:
-                QMessageBox.warning(self, "Errore", "Errore nell'aggiornamento dell'ordine.")
-        except Exception as e:
-            QMessageBox.warning(self, "Error", f"Errore nella comunicazione con il server: {e}")
-
-def run():
-    app = QApplication([])
-    dialog = GestioneOrdinazioniLogic()
-    dialog.exec_()
-
-if __name__ == "__main__":
-    run()
+                self.clearLayout(item.layout())

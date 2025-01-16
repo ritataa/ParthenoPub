@@ -14,57 +14,55 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTableWidget" name="tableWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>521</width>
-      <height>181</height>
+      <width>571</width>
+      <height>511</height>
      </rect>
     </property>
-    <property name="rowCount">
-     <number>5</number>
-    </property>
-    <property name="columnCount">
-     <number>5</number>
-    </property>
-    <row/>
-    <row/>
-    <row/>
-    <row/>
-    <row/>
-    <column/>
-    <column/>
-    <column/>
-    <column/>
-    <column/>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>200</y>
-      <width>91</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Aggiorna Stato</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>200</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Segna Libero</string>
-    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="0">
+      <widget class="QPushButton" name="pushButton_segnaOccupato">
+       <property name="text">
+        <string>Segna Occupato</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="pushButton_segnaLibero">
+       <property name="text">
+        <string>Segna Libero</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QTableWidget" name="tableWidget_listaTavoli">
+       <column>
+        <property name="text">
+         <string>TavoloID</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Numero posti</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Numero persone</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Stato</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -73,7 +71,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

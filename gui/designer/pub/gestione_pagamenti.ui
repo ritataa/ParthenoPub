@@ -14,153 +14,72 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTableWidget" name="tableWidgetTavoli">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>40</x>
       <y>0</y>
-      <width>401</width>
-      <height>192</height>
+      <width>751</width>
+      <height>541</height>
      </rect>
     </property>
-    <column>
-     <property name="text">
-      <string>ID Tavolo</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Persone</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Prezzo</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Stato</string>
-     </property>
-    </column>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>200</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ID Tavolo </string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>200</y>
-      <width>47</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Persone</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>200</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Prezzo</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>200</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Stato</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditID">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>220</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditPersone">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>220</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditPrezzo">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>220</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditStato">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>220</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonAggiungi">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>280</y>
-      <width>91</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Aggiungi Tavolo</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonAggiorna">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>280</y>
-      <width>91</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Aggiorna Stato</string>
-    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="4" column="2">
+      <widget class="QPushButton" name="pushButton_pagato">
+       <property name="text">
+        <string>Pagato</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="lineEdit_filtro"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_filtro">
+       <property name="text">
+        <string>Inserisci TavoloID:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="pushButton_filtra">
+       <property name="text">
+        <string>Filtra</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="3">
+      <widget class="QTableWidget" name="tableWidget_pagamenti">
+       <column>
+        <property name="text">
+         <string>TavoloID</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>NumPersone</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Prezzo</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Stato</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="pushButton_reset">
+       <property name="text">
+        <string>Reset</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -169,7 +88,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

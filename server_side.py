@@ -98,15 +98,7 @@ def ClientsRichiesteMenu(payload):
     else:
         return {"result": "false"}
 
-def ClientsRichiesteInvioOrdine():
-    """
-    Visualizza gli ordini da inviare o completati per ogni tavolo.
-    """
-    result_rows = find_rows(DB["INVIA_ORDINE"])
-    if result_rows:
-        return {"result": result_rows}
-    else:
-        return {"result": "false"}
+
 
 
 def GetMenu(payload):
@@ -213,7 +205,23 @@ def inviaOrdine(payload):
     except Exception as e:
         return {"result": f"Not OK error: {e}"}
 
+# in gestione_ordinazioni
+def ClientsRichiesteInvioOrdine():
+    """
+    Recupera l'elenco degli ordini da inviare o completare per ogni tabella.
+    """
+    # Find all rows in the INVIA_ORDINE table where the Status is "Richiesta" or "Completato"
+    result_rows = find_rows(DB["INVIA_ORDINE"], {"Stato": ["1","0","?"]})
+    
+    if result_rows:
+        # Return the orders found in the database
+        return {"result": result_rows}
+    else:
+        # Return "false" if no orders are found
+        return {"result": "false"}
 
+def AggiornaStatoOrdine(payload):
+    jsonToSend = {}
 
 
 def method_switch(method, payload):
@@ -246,6 +254,10 @@ def method_switch(method, payload):
             return GetOrdiniByTavolo(payload)
         case "DeleteOrdiniByTavolo":
             return DeleteOrdiniByTavolo(payload)
+        
+
+        case "AggiornaStatoOrdine":
+            return AggiornaStatoOrdine(payload)
 
         case "GetUser":
             return GetUser(payload)
