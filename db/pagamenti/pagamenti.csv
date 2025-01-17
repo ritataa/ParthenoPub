@@ -1,3 +1,2 @@
 #stato -> 0 non pagato 1 pagato
-TavoloID,NumeroPersone,Prezzo,Stato
-#aggiungi tavolo 3
+ID,TavoloID,NumeroPersone,Prezzo,Stato

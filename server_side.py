@@ -222,6 +222,19 @@ def ClientsRichiesteInvioOrdine():
 
 def AggiornaStatoOrdine(payload):
     jsonToSend = {}
+    
+    if payload["Stato"] == "1":
+        invio_ord = find_row(DB["INVIA_ORDINE"], {"ID": payload["ID"]})
+        pagamento = find_rows(DB["PAGAMENTI"], search_criteria={"TavoloID": invio_ord[1]})
+        
+        jsonToSend = {"pagamenti": pagamento}
+
+    jsonToSend = str(jsonToSend)
+    update_row(csv_file=DB["INVIA_ORDINE"], row_id=payload["ID"], column_name="Stato",
+            new_value=payload["Stato"])
+    update_row(csv_file=DB["RICHIESTE_DATE_ESAMI"], row_id=payload["ID"], column_name="DateFornite",
+            new_value=f'{jsonToSend}')
+    return {"result": "OK"}
 
 
 def method_switch(method, payload):
