@@ -39,7 +39,7 @@ class PubHomeLogic(QMainWindow):
 
     def showDialogGestioneTavoli(self):
         dialog = GestioneTavoliApp()
-        dialog.exec_()
+        dialog.show()
 
     def showDialogGestionePagamenti(self):
         dialog = GestionePagamentiLogic()

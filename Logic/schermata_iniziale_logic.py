@@ -21,11 +21,11 @@ class MainWindow(QMainWindow):
 
     def showClienteHome(self):
         dialog = ClienteHomeLogic(self.user)
-        dialog.exec_()
+        dialog.show()
 
     def showServerHome(self):
         dialog = PubHomeLoginLogic(self.user)
-        dialog.exec_()
+        dialog.show()
 
 def run():
     app = QApplication(sys.argv)
