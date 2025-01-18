@@ -5,22 +5,29 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget
 
 from Logic.schermata_iniziale_logic import MainWindow
+from Logic.Pub.pub_home_login_logic import PubHomeLoginLogic
+#from Logic.Pub.pub_home_logic import PubHomeLogic
+from Logic.Clienti.cliente_home_logic import ClienteHomeLogic
 
 from multiprocessing import Process
 from combined_multiplex_concurrent_server import server_main
 
 
+
 def main():
     app = QApplication(sys.argv)
 
-    initial_window = MainWindow()
+    login_window = MainWindow()
+    clienti_window = ClienteHomeLogic(login_window.user)
+    pub_window = PubHomeLoginLogic(login_window.user)
 
-    # Connect buttons to their respective functions
-    
+    login_window.show_clienti_home.connect(lambda:clienti_window.showWindow(login_window.user))
+    login_window.show_pub_home.connect(lambda: pub_window.showWindow(login_window.user))
 
+    login_window.show()
 
-    initial_window.show()
     app.exec_()
+
 
 
 
