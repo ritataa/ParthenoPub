@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow
 
-from Common.communication import formato_data
 from gui.Clienti.cliente_home_gui import Ui_ClienteHome 
 from Logic.Clienti.gestione_richiesta_menu import GestioneRichiestaMenuLogic
 from Logic.Clienti.gestione_invio_ordine import GestioneInvioOrdineLogic
@@ -10,7 +9,7 @@ from Logic.Clienti.gestione_entrata import GestioneEntrataLogic
 class ClienteHomeLogic(QMainWindow):
     user = None
 
-    def __init__(self,user):
+    def __init__(self, user):
         self.user = user
         super().__init__()
         self.ui = Ui_ClienteHome()  
@@ -24,9 +23,7 @@ class ClienteHomeLogic(QMainWindow):
     def showWindow(self, user):
         self.show()
         self.user = user
-        self.ui.MtrLabel.setText(user[0])
-        self.ui.NameLastnameLabel.setText(f"{user[1]}, {user[2]}")
-        self.ui.DateLabel.setText(f"{formato_data()}")
+        
 
     def showRichiestaMenu(self):
         dialog = GestioneRichiestaMenuLogic()

@@ -4,7 +4,7 @@ import json
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
-from Common.communication import formato_data
+
 import os
 from SelMultiplexClient import launchMethod
 from Common.communication import customHash, request_constructor_str, loadJSONFromFile
@@ -32,9 +32,7 @@ class PubHomeLoginLogic(QMainWindow):
     def showWindow(self, user):
         self.show()
         self.user = user
-        self.ui.MtrLabel.setText(user[0])
-        self.ui.NameLastnameLabel.setText(f"{user[1]}, {user[2]}")
-        self.ui.DateLabel.setText(f"{formato_data()}")
+        
 
     def checkLogin(self):
         ROOT_DIR = os.path.abspath(os.curdir)
