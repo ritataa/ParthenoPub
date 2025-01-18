@@ -20,16 +20,19 @@ class MainWindow(QMainWindow):
         self.ui.serverButton.clicked.connect(self.showServerHome)
 
     def showClienteHome(self):
-        dialog = ClienteHomeLogic(self.user)
-        dialog.show()
+        self.show_clienti_home.emit()
 
     def showServerHome(self):
-        dialog = PubHomeLoginLogic(self.user)
-        dialog.show()
+        self.show_pub_home.emit()
 
 def run():
     app = QApplication(sys.argv)
     window = MainWindow()
+
+    # Collegare i segnali per aprire le rispettive finestre
+    window.show_clienti_home.connect(lambda: ClienteHomeLogic(window.user).show())
+    window.show_pub_home.connect(lambda: PubHomeLoginLogic(window.user).show())
+
     window.show()
     app.exec_()
 
