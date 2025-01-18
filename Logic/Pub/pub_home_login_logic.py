@@ -19,10 +19,11 @@ class PubHomeLoginLogic(QMainWindow):
     show_pub_home = pyqtSignal()
     user = []
 
-    def __init__(self):
+    def __init__(self, user=None):
         super().__init__()
-        self.ui = Ui_MainWindow()  # Create an instance of the UI class
-        self.ui.setupUi(self)  # Set up the UI
+        self.user = user
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
 
         # Connect the login button to the login function
         self.ui.pushButton.clicked.connect(self.checkLogin)
