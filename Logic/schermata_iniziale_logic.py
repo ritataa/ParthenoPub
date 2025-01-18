@@ -1,3 +1,9 @@
+import json
+import os
+import sys
+
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5.QtWidgets import QMainWindow
 
 from Common.communication import find_rows
@@ -9,7 +15,10 @@ from Logic.Pub.pub_home_login_logic import PubHomeLoginLogic
 
 class MainWindow(QMainWindow):
 
-    user = None
+    show_clienti_home = pyqtSignal()
+    show_pub_home = pyqtSignal()
+    user = []
+
     def __init__(self, user):
         self.user = user
         super().__init__()

@@ -1,9 +1,5 @@
-import os
-
 import sys
-
-from PyQt5.QtWidgets import QApplication, QWidget
-
+from PyQt5.QtWidgets import QApplication
 from Logic.schermata_iniziale_logic import MainWindow
 from Logic.Pub.pub_home_login_logic import PubHomeLoginLogic
 #from Logic.Pub.pub_home_logic import PubHomeLogic
