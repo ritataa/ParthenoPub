@@ -225,16 +225,32 @@ def AggiornaStatoOrdine(payload):
     
     if payload["Stato"] == "1":
         invio_ord = find_row(DB["INVIA_ORDINE"], {"ID": payload["ID"]})
-        pagamento = find_rows(DB["PAGAMENTI"], search_criteria={"TavoloID": invio_ord[1]})
+        tavolo_id = invio_ord[1]
         
-        jsonToSend = {"pagamenti": pagamento}
+        # Recupera i dettagli del tavolo
+        tavolo = find_row(DB["TAVOLI"], {"TavoloID": tavolo_id})
+        numero_persone = tavolo[2]
+        
+        # Calcola il pagamento totale
+        pagamento_totale = 0
+        if invio_ord[2]:  # ordineG
+            menu_gen = find_row(DB["MGEN"], {"ID": invio_ord[2]})
+            pagamento_totale += float(menu_gen[2]) * int(invio_ord[3])
+        if invio_ord[4]:  # ordineB
+            menu_birre = find_row(DB["MBIRRE"], {"ID": invio_ord[4]})
+            pagamento_totale += float(menu_birre[2]) * int(invio_ord[5])
+        if invio_ord[6]:  # ordineD
+            menu_dolci = find_row(DB["MDOLCI"], {"ID": invio_ord[6]})
+            pagamento_totale += float(menu_dolci[2]) * int(invio_ord[7])
+        
+        # Inserisci una nuova riga nel file dei pagamenti
+        insert_row(DB["PAGAMENTI"], [payload["ID"], tavolo_id, numero_persone, pagamento_totale, "0"])
+        
+        jsonToSend = {"pagamenti": [payload["ID"], tavolo_id, numero_persone, pagamento_totale, "0"]}
 
     jsonToSend = str(jsonToSend)
     update_row(csv_file=DB["INVIA_ORDINE"], row_id=payload["ID"], column_name="Stato",
             new_value=payload["Stato"])
-    update_row(csv_file=DB["RICHIESTE_DATE_ESAMI"], row_id=payload["ID"], column_name="DateFornite",
-            new_value=f'{jsonToSend}')
-    return {"result": "OK"}
 
 
 def method_switch(method, payload):

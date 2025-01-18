@@ -84,6 +84,11 @@ class GestioneOrdinazioniLogic(QDialog):
         row = launchMethod(request_constructor_str({"ID":ID, "Stato":"1"}, "AggiornaStatoOrdine"), server_coords['address'], server_coords['port'])
         row = json.loads(row)
         
+        if row.get("result") == "OK":
+            QMessageBox.information(None, "Trasferimento - Successo", "Dettagli dell'ordine trasferiti con successo nel file dei pagamenti")
+        else:
+            QMessageBox.warning(None, "Errore", "Errore nel trasferimento dei dettagli dell'ordine nel file dei pagamenti")
+
 
     def clearTableView(self):
         while self.ui.TableView.count():
