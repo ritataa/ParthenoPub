@@ -74,5 +74,11 @@ def run():
     window.show()
     sys.exit(app.exec_())
 
+
 if __name__ == "__main__":
-    run()
+    input_data = {"header": "GetUser", "payload": {"User": "parthenopub", "Password": "1234"}}
+    result = launchMethod(json.dumps(input_data), "127.0.0.1", 1024)
+    print(result)
+
+#if __name__ == "__main__":
+#   run('["1", "parthenopub","1234"]')

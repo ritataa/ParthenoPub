@@ -59,4 +59,4 @@ def run(user):
     window.show()
 
 if __name__ == "__main__":
-    run('["1", "parthenopub","1234"]')
+    run()
