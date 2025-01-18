@@ -12,14 +12,17 @@ from server_side import method_switch
 
 MAXLINE = 256
 
-class PubHandler(socketserver.StreamRequestHandler):
+class MyHandler(socketserver.StreamRequestHandler):
     def handle(self):
+        # timeval = time.ctime(time.time())
+        # buffer = f"{timeval}\r\n".encode('utf-8')
+        # full_write(self.request, buffer)
+
         host, port = self.client_address
         print(f"Request from host {host}, port {port}")
 
         while True:
             try:
-                # Lettura dei dati dal client
                 data = self.rfile.readline(MAXLINE)
                 if not data:
                     print(f"Connection closed by {self.client_address}")
@@ -31,12 +34,11 @@ class PubHandler(socketserver.StreamRequestHandler):
 
                 print(f"Parsed Data: {data_decoded}")
 
-                # Elaborazione della richiesta
                 result = method_switch(data_decoded["header"], data_decoded["payload"])
                 response = f"{json.dumps(result)}".encode("utf-8")
                 print(f"Response to send: {response}")
 
-                # Invio della risposta
+                # Use blocking send to ensure the response is fully sent before closing
                 sent = full_write(self.request, response)
                 print(f"Sent {sent}")
 
@@ -51,12 +53,12 @@ class PubHandler(socketserver.StreamRequestHandler):
                 break
 
 
-class PubServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
 
 def server_main(server_address, server_port):
-    server = PubServer((server_address, server_port), PubHandler)
+    server = ThreadedTCPServer((server_address, server_port), MyHandler)
     server_thread = threading.Thread(target=server.serve_forever)
     server_thread.start()
     print(f"Server listening on port {server_port}...")
@@ -68,6 +70,5 @@ def server_main(server_address, server_port):
 
 
 if __name__ == "__main__":
-    # Caricamento indirizzo e porta del server
     server_coords = loadJSONFromFile("server_address.json")
     server_main(server_coords['address'], server_coords['port'])

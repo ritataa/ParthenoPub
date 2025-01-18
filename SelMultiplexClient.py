@@ -4,9 +4,9 @@ import asyncio
 import json
 
 from Common.full_write import full_write
-from Common.communication import loadJSONFromFile  # Importa la funzione dal file communication
 
 MAXLINE = 256
+
 
 async def read_socket(sock):
     received_data = ""
@@ -30,13 +30,9 @@ async def client_echo(data, sock):
     return await read_socket(sock)
 
 
-def launchMethod(input: str, config_file: str = "server_address.json"):
-    # Usa loadJSONFromFile per leggere il file di configurazione
-    server_config = loadJSONFromFile(config_file)
-    server_address = server_config["address"]
-    server_port = server_config["port"]
-
+def launchMethod(input: str, server_address: str, server_port: int):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     serv_add = (server_address, server_port)
 
     try:
@@ -55,11 +51,7 @@ def launchMethod(input: str, config_file: str = "server_address.json"):
 
 
 if __name__ == "__main__":
-    # Esempio di dati di input
-    input_data = {
-        "header": {"Action": "ExampleAction"},
-        "payload": {"Key1": "Value1", "Key2": "Value2"}
-    }
-    # Converte l'input in formato JSON
-    result = launchMethod(json.dumps(input_data))
-    print("Response from server:", result)
+    # Example input data without user and password
+    input_data = {"header": "SomeHeader", "payload": {"SomeKey": "SomeValue"}}
+    result = launchMethod(json.dumps(input_data), "127.0.0.1", 1024)
+    print(result)

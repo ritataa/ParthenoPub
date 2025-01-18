@@ -1,18 +1,16 @@
-import sys
-import csv
 import json
-from PyQt5 import QtWidgets, uic
+import os
+import sys
+
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 
-import os
 from SelMultiplexClient import launchMethod
 from Common.communication import customHash, request_constructor_str, loadJSONFromFile
 
 
-
-from Logic.Pub.pub_home_logic import PubHomeLogic
 from gui.Pub.pub_home_login_gui import Ui_MainWindow  # Import the generated UI class
+from Logic.Pub.pub_home_logic import PubHomeLogic  # Import the PubHomeLogic class
 
 
 
@@ -27,7 +25,7 @@ class PubHomeLoginLogic(QMainWindow):
         self.ui.setupUi(self)  # Set up the UI
 
         # Connect the login button to the login function
-        self.ui.LoginButton.clicked.connect(self.checkLogin)
+        self.ui.pushButton.clicked.connect(self.checkLogin)
 
     def showWindow(self, user):
         self.show()
@@ -38,9 +36,10 @@ class PubHomeLoginLogic(QMainWindow):
         ROOT_DIR = os.path.abspath(os.curdir)
         server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
 
-        password = str(customHash(self.ui.PasswordField.text()))
-        username = self.ui.UserField.text()
-        
+        password = str(customHash(self.ui.lineEdit_2.text()))
+        username = self.ui.lineEdit.text()
+        result = None
+
         # Construct the payload for the server
         toSend = {"User": username, "Password": password}
 
@@ -65,6 +64,8 @@ class PubHomeLoginLogic(QMainWindow):
         self.user = json.loads(user)
         self.show_pub_home.emit()
         self.close()
+        pub_home_window = PubHomeLogic(self.user)
+        pub_home_window.show()
 
 def run():
     app = QApplication(sys.argv)

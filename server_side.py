@@ -44,7 +44,7 @@ def GetUser(payload):
     result_row = find_row(DB["LOGIN"], {"User": payload["User"]})
     if result_row:
         if "Password" in payload:
-            if str(result_row[4]) == str(payload["Password"]):
+            if str(result_row[2]) == str(payload["Password"]):
                 return result_row
             else:
                 return False

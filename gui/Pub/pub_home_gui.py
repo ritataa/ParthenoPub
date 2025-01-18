@@ -38,6 +38,9 @@ class Ui_GestionePub(object):
         self.btn_visualizza_tavoli = QtWidgets.QPushButton(self.widget)
         self.btn_visualizza_tavoli.setObjectName("btn_visualizza_tavoli")
         self.gridLayout.addWidget(self.btn_visualizza_tavoli, 0, 0, 1, 1)
+        self.btn_cameriere = QtWidgets.QPushButton(self.widget)
+        self.btn_cameriere.setObjectName("btn_cameriere")
+        self.gridLayout.addWidget(self.btn_cameriere, 2, 0, 1, 1)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(460, -10, 191, 61))
         font = QtGui.QFont()
@@ -67,6 +70,7 @@ class Ui_GestionePub(object):
         self.btn_visualizza_prenotazioni.setText(_translate("GestionePub", "Visualizza Prenotazioni"))
         self.btn_richieste_clienti.setText(_translate("GestionePub", "Richieste Clienti"))
         self.btn_visualizza_tavoli.setText(_translate("GestionePub", "Visualizza Tavoli"))
+        self.btn_cameriere.setText(_translate("GestionePub", "Palmare"))
         self.label.setText(_translate("GestionePub", "Gestione Pub"))
 
 
