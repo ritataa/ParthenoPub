@@ -21,7 +21,7 @@ DB = {
 
     "MENU": os.path.join(ROOT_DIR, 'db', 'menu', 'menu.csv'),
 
-    "LOGIN": os.path.join(ROOT_DIR, 'db', 'login', 'login.csv'),
+    "LOGIN": os.path.join(ROOT_DIR, 'db', 'login', 'login.csv')
 }
 
 def default_case():
