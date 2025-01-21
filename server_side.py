@@ -41,17 +41,25 @@ def GetUser(payload):
     """
     Verifica le credenziali dell'utente nel file login.csv.
     """
+    print(f"Payload ricevuto: {payload}")
     result_row = find_row(DB["LOGIN"], {"User": payload["User"]})
+    print(f"Riga trovata: {result_row}")
     if result_row:
         if "Password" in payload:
-            if str(result_row[2]) == str(payload["Password"]):
-                return result_row
+            print(f"Password memorizzata: {result_row[2]}")
+            print(f"Password fornita: {payload['Password']}")
+            if result_row[2] == payload["Password"]:
+                print("Credenziali corrette")
+                return json.dumps({"result": "success", "data": result_row})  # Restituisci i dati come JSON
             else:
-                return False
+                print("Password errata")
+                return json.dumps({"result": "false"})
         else:
-            return False
+            print("Password non fornita")
+            return json.dumps({"result": "false"})
     else:
-        return False
+        print("Utente non trovato")
+        return json.dumps({"result": "false"})
 
 def ClientsPrenotazioniTav(payload):
     """

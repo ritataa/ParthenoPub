@@ -4,7 +4,7 @@ import socket
 import os
 import csv
 import multiprocessing
-
+import hashlib
 
 # Funzione per costruire il protocollo di comunicazione (header + payload)
 def build_communication_protocol(header_data, payload_data):
@@ -99,14 +99,9 @@ def request_constructor_str(input_object, header):
     return json.dumps(request_constructor_obj(input_object, header))
 
 
-def customHash(text: str):
-    """
-    Funzione di hashing personalizzata per generare un hash per il testo fornito.
-    """
-    hash = 0
-    for ch in text:
-        hash = (hash * 281 ^ ord(ch) * 997) & 0xFFFFFFFF
-    return hash
+
+def customHash(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 
 # Funzione per caricare l'indirizzo e la porta del server dal file JSON
 def loadJSONFromFile(json_file):

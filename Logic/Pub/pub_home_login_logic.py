@@ -37,7 +37,7 @@ class PubHomeLoginLogic(QMainWindow):
         ROOT_DIR = os.path.abspath(os.curdir)
         server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
 
-        password = str(customHash(self.ui.lineEdit_2.text()))
+        password = self.ui.lineEdit_2.text()
         username = self.ui.lineEdit.text()
         result = None
 
@@ -50,20 +50,33 @@ class PubHomeLoginLogic(QMainWindow):
         # Clean up the result string
         result = result.replace("\n", "").replace("\r", "")
 
+        # Debug: Print the result
+        print(f"Server response: {result}")
+
+        # Parse the result
+        result_json = None
+        try:
+            result_json = json.loads(result)
+        except json.JSONDecodeError as e:
+            QMessageBox.critical(self, "Error", f"Failed to parse server response: {e}")
+            return
         # Check the result and display appropriate messages
-        if result == "false":
-                QMessageBox.critical(self, "Login - Error", "Username or Password incorrect. Please try again.")
-        else:
+        if isinstance(result_json, dict) and result_json.get("result") == "false":
+            QMessageBox.critical(self, "Login - Error", "Username or Password incorrect. Please try again.")
+        elif isinstance(result_json, dict) and "data" in result_json:
             try:
-                self.open_pub_home_window(result)
+                self.open_pub_home_window(result_json["data"])
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"An error occurred: {e}")
+        else:
+            QMessageBox.critical(self, "Error", "Unexpected server response format.")
 
 
     
-    def open_pub_home_window(self, user):
-        self.user = json.loads(user)
-        self.show_pub_home.emit()
+    def open_pub_home_window(self, user_data):
+        self.user = user_data
+        print(f"Opening PubHomeLogic with user data: {self.user}")
+        #self.show_pub_home.emit()
         self.close()
         pub_home_window = PubHomeLogic(self.user)
         pub_home_window.show()
@@ -74,11 +87,13 @@ def run():
     window.show()
     sys.exit(app.exec_())
 
-
 if __name__ == "__main__":
-    input_data = {"header": "GetUser", "payload": {"User": "parthenopub", "Password": "1234"}}
-    result = launchMethod(json.dumps(input_data), "127.0.0.1", 1024)
-    print(result)
+    run()
+
+#if __name__ == "__main__":
+#    input_data = {"header": "GetUser", "payload": {"User": "parthenopub", "Password": "1234"}}
+#    result = launchMethod(json.dumps(input_data), "127.0.0.1", 1024)
+#    print(result)
 
 #if __name__ == "__main__":
 #   run('["1", "parthenopub","1234"]')

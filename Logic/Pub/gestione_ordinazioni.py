@@ -1,7 +1,6 @@
 import json
 import os
-from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QPushButton, QVBoxLayout, \
-    QHBoxLayout
+from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QPushButton, QVBoxLayout, QHBoxLayout
 from Common.communication import loadJSONFromFile, request_constructor_str
 from SelMultiplexClient import launchMethod
 from gui.Pub.gestione_ordinazioni_gui import Ui_GestioneOrdinazioni
